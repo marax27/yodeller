@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Yodeller.Web.Features;
 
@@ -15,8 +16,20 @@ public class RequestsController : ControllerBase
     }
 
     [HttpGet]
-    public IReadOnlyCollection<GetRequestDto> Get()
+    public Task<IReadOnlyCollection<GetRequestDto>> Get()
     {
-        return Array.Empty<GetRequestDto>();
+        throw new NotImplementedException(nameof(Get));
+    }
+
+    [HttpPost]
+    public Task Post(NewRequestDto request)
+    {
+        throw new NotImplementedException(nameof(Post));
+    }
+
+    [HttpPatch("{requestId}")]
+    public Task Patch(string requestId, JsonPatchDocument<EditRequestDto> requestPatch)
+    {
+        throw new NotImplementedException(nameof(Patch));
     }
 }

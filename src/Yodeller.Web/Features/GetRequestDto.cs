@@ -2,5 +2,6 @@
 
 public record GetRequestDto(
     string RequestId,
-    string MediaId
+    string MediaId,
+    string Status
 );
