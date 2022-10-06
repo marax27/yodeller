@@ -1,6 +1,6 @@
 ﻿namespace Yodeller.Web.Features;
 
-public record GetDownloadRequestDto(
+public record GetRequestDto(
     string RequestId,
     string MediaId
 );
