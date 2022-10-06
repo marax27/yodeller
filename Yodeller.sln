@@ -5,7 +5,13 @@ VisualStudioVersion = 17.3.32728.150
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E9BC450F-79D5-418B-ADC9-892BF740F61D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yodeller.Web", "src\Yodeller.Web\Yodeller.Web.csproj", "{844C7F30-1D25-4642-998A-6C0424D55159}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yodeller.Web", "src\Yodeller.Web\Yodeller.Web.csproj", "{844C7F30-1D25-4642-998A-6C0424D55159}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{E58129AF-79D0-4FC1-824D-DFAA7DBA9670}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yodeller.Application.Tests", "tests\Yodeller.Application.Tests\Yodeller.Application.Tests.csproj", "{7D2FD143-E8EB-4C43-AAFE-FBA9DF4BDEFC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yodeller.Application", "src\Yodeller.Application\Yodeller.Application.csproj", "{57278C33-2986-43C8-8C8B-969AA8C4E4D4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,12 +23,22 @@ Global
 		{844C7F30-1D25-4642-998A-6C0424D55159}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{844C7F30-1D25-4642-998A-6C0424D55159}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{844C7F30-1D25-4642-998A-6C0424D55159}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D2FD143-E8EB-4C43-AAFE-FBA9DF4BDEFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D2FD143-E8EB-4C43-AAFE-FBA9DF4BDEFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D2FD143-E8EB-4C43-AAFE-FBA9DF4BDEFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D2FD143-E8EB-4C43-AAFE-FBA9DF4BDEFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57278C33-2986-43C8-8C8B-969AA8C4E4D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57278C33-2986-43C8-8C8B-969AA8C4E4D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57278C33-2986-43C8-8C8B-969AA8C4E4D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57278C33-2986-43C8-8C8B-969AA8C4E4D4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{844C7F30-1D25-4642-998A-6C0424D55159} = {E9BC450F-79D5-418B-ADC9-892BF740F61D}
+		{7D2FD143-E8EB-4C43-AAFE-FBA9DF4BDEFC} = {E58129AF-79D0-4FC1-824D-DFAA7DBA9670}
+		{57278C33-2986-43C8-8C8B-969AA8C4E4D4} = {E9BC450F-79D5-418B-ADC9-892BF740F61D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A5FC429F-4FC5-4361-8568-057C17705363}
