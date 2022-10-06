@@ -1,3 +1,5 @@
+using Yodeller.Web.Middlewares;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
@@ -13,7 +15,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthorization();
+app.UseMiddleware<CustomExceptionHandlingMiddleware>();
 
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }
