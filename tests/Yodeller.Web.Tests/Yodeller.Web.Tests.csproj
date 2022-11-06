@@ -28,8 +28,4 @@
     <ProjectReference Include="..\..\src\Yodeller.Web\Yodeller.Web.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Api\" />
-  </ItemGroup>
-
 </Project>
