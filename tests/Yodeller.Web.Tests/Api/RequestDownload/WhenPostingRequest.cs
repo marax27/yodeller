@@ -28,12 +28,12 @@ public class WhenPostingRequest : IClassFixture<TestApplication>
     [Theory]
     [InlineData("9999")]
     [InlineData("http://sample-media-page.com/videos?id=444444")]
-    public async Task GivenValidRequestThenRepositoryReceivedExpectedRequest(string givenMediaLocator)
+    public async Task GivenValidRequestThenProducerReceivedExpectedRequest(string givenMediaLocator)
     {
         var response = await PostRequest(givenMediaLocator);
 
-        _application.MockRequestRepository
-            .Verify(mock => mock.Add(It.Is<DownloadRequest>(request => request.MediaLocator == givenMediaLocator)), Times.Once);
+        _application.MockRequestProducer
+            .Verify(mock => mock.Produce(It.Is<DownloadRequest>(request => request.MediaLocator == givenMediaLocator)), Times.Once);
     }
 
     private async Task<HttpResponseMessage> PostRequest(string givenMediaLocator)

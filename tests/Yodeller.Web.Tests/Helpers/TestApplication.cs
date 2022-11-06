@@ -6,7 +6,7 @@ namespace Yodeller.Web.Tests.Helpers;
 
 public class TestApplication : WebApplicationFactory<Program>
 {
-    public Mock<IRequestRepository> MockRequestRepository { get; } = new();
+    public Mock<IMessageProducer> MockRequestProducer { get; } = new();
 
     protected override IHost CreateHost(IHostBuilder builder)
     {
@@ -17,7 +17,7 @@ public class TestApplication : WebApplicationFactory<Program>
     /// Populate with further services as needed.
     private void RegisterTestServices(IServiceCollection services)
     {
-        services.AddSingleton(MockRequestRepository.Object);
+        services.AddSingleton(MockRequestProducer.Object);
     }
 }
 

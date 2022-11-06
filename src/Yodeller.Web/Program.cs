@@ -12,7 +12,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddTransient<IClock, BasicClock>();
-builder.Services.AddSingleton<IRequestRepository, InMemoryRequestRepository>();
+builder.Services.AddSingleton<IMessageProducer, InMemoryMessageProducer>();
 
 var app = builder.Build();
 

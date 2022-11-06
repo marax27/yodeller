@@ -11,8 +11,8 @@ public class WhenApplicationFailsToStoreRequestSentByGetMethod : IClassFixture<T
     public WhenApplicationFailsToStoreRequestSentByGetMethod(TestApplication application)
     {
         _application = application;
-        _application.MockRequestRepository.Setup(mock => mock.Add(It.IsAny<DownloadRequest>()))
-            .Throws(new InvalidOperationException("Internal repository failure"));
+        _application.MockRequestProducer.Setup(mock => mock.Produce(It.IsAny<DownloadRequest>()))
+            .Throws(new InvalidOperationException("Internal producer failure"));
     }
 
     [Fact]

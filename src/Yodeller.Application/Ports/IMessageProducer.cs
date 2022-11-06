@@ -2,7 +2,7 @@
 
 namespace Yodeller.Application.Ports;
 
-public interface IRequestRepository
+public interface IMessageProducer
 {
-    void Add(DownloadRequest request);
+    void Produce(DownloadRequest request);
 }

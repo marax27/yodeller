@@ -13,7 +13,7 @@ public class WhenRequestingDownload
 
     private readonly RequestDownloadCommand _sampleCommand = new("http://example-media-page.com?id=123");
 
-    private readonly Mock<IRequestRepository> _requestRepositoryMock = new();
+    private readonly Mock<IMessageProducer> _producerMock = new();
 
     private readonly StubClock _stubClock;
 
@@ -28,7 +28,7 @@ public class WhenRequestingDownload
     [Fact]
     public async Task GivenValidCommandThenFinishSuccessfully()
     {
-        var sut = new RequestDownloadCommandHandler(_requestRepositoryMock.Object, _stubClock);
+        var sut = new RequestDownloadCommandHandler(_producerMock.Object, _stubClock);
 
         var act = async () => await sut.Handle(_sampleCommand, CancellationToken.None);
 
@@ -36,24 +36,24 @@ public class WhenRequestingDownload
     }
 
     [Fact]
-    public async Task GivenValidCommandThenRepositoryReceivedExactlyOneRequest()
+    public async Task GivenValidCommandThenProducerReceivedExactlyOneRequest()
     {
-        var sut = new RequestDownloadCommandHandler(_requestRepositoryMock.Object, _stubClock);
+        var sut = new RequestDownloadCommandHandler(_producerMock.Object, _stubClock);
 
         await sut.Handle(_sampleCommand, CancellationToken.None);
 
-        _requestRepositoryMock.Verify(mock => mock.Add(It.IsAny<DownloadRequest>()), Times.Once);
+        _producerMock.Verify(mock => mock.Produce(It.IsAny<DownloadRequest>()), Times.Once);
     }
 
     [Fact]
-    public async Task GivenValidCommandThenRepositoryReceivedExpectedRequest()
+    public async Task GivenValidCommandThenProducerReceivedExpectedRequest()
     {
-        var stubRepository = new StubRequestRepository();
-        var sut = new RequestDownloadCommandHandler(stubRepository, _stubClock);
+        var stubProducer = new StubMessageProducer();
+        var sut = new RequestDownloadCommandHandler(stubProducer, _stubClock);
 
         await sut.Handle(_sampleCommand, CancellationToken.None);
 
-        var actualRequest = stubRepository.GetRegisteredDownloadRequests().Single();
+        var actualRequest = stubProducer.GetRegisteredDownloadRequests().Single();
 
         actualRequest.Should().NotBeNull();
         actualRequest.Id.Should().NotBeNullOrWhiteSpace();

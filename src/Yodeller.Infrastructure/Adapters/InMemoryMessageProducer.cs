@@ -4,11 +4,11 @@ using Yodeller.Application.Ports;
 
 namespace Yodeller.Infrastructure.Adapters;
 
-public class InMemoryRequestRepository : IRequestRepository
+public class InMemoryMessageProducer : IMessageProducer
 {
     private readonly ConcurrentBag<DownloadRequest> _requests = new();
 
-    public void Add(DownloadRequest request)
+    public void Produce(DownloadRequest request)
     {
         _requests.Add(request);
     }
