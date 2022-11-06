@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Moq;
 using Yodeller.Application.Features;
+using Yodeller.Application.Messages;
 using Yodeller.Application.Models;
 using Yodeller.Application.Ports;
 using Yodeller.Application.Tests.Helpers;
@@ -13,7 +14,7 @@ public class WhenRequestingDownload
 
     private readonly RequestDownloadCommand _sampleCommand = new("http://example-media-page.com?id=123");
 
-    private readonly Mock<IMessageProducer> _producerMock = new();
+    private readonly Mock<IMessageProducer<BaseMessage>> _producerMock = new();
 
     private readonly StubClock _stubClock;
 
@@ -42,7 +43,7 @@ public class WhenRequestingDownload
 
         await sut.Handle(_sampleCommand, CancellationToken.None);
 
-        _producerMock.Verify(mock => mock.Produce(It.IsAny<DownloadRequest>()), Times.Once);
+        _producerMock.Verify(mock => mock.Produce(It.IsAny<BaseMessage>()), Times.Once);
     }
 
     [Fact]

@@ -1,5 +1,6 @@
 using MediatR;
 using Yodeller.Application;
+using Yodeller.Application.Messages;
 using Yodeller.Application.Ports;
 using Yodeller.Infrastructure.Adapters;
 using Yodeller.Web.Middlewares;
@@ -12,7 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddTransient<IClock, BasicClock>();
-builder.Services.AddSingleton<IMessageProducer, InMemoryMessageProducer>();
+builder.Services.AddSingleton<IMessageProducer<BaseMessage>, InMemoryMessageProducer>();
 
 var app = builder.Build();
 

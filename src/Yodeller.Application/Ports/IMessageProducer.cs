@@ -1,8 +1,6 @@
-﻿using Yodeller.Application.Models;
+﻿namespace Yodeller.Application.Ports;
 
-namespace Yodeller.Application.Ports;
-
-public interface IMessageProducer
+public interface IMessageProducer<in TBaseMessage> where TBaseMessage : class
 {
-    void Produce(DownloadRequest request);
+    void Produce(TBaseMessage message);
 }

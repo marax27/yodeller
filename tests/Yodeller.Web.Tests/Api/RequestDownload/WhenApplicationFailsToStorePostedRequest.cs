@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
-using Yodeller.Application.Models;
+using Yodeller.Application.Messages;
 using Yodeller.Web.Features;
 using Yodeller.Web.Tests.Helpers;
 
@@ -13,7 +13,7 @@ public class WhenApplicationFailsToStorePostedRequest : IClassFixture<TestApplic
     public WhenApplicationFailsToStorePostedRequest(TestApplication application)
     {
         _application = application;
-        _application.MockRequestProducer.Setup(mock => mock.Produce(It.IsAny<DownloadRequest>()))
+        _application.MockRequestProducer.Setup(mock => mock.Produce(It.IsAny<BaseMessage>()))
             .Throws(new InvalidOperationException("Internal producer failure"));
     }
 

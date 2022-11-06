@@ -1,15 +1,19 @@
-﻿using Yodeller.Application.Models;
+﻿using Yodeller.Application.Messages;
+using Yodeller.Application.Models;
 using Yodeller.Application.Ports;
 
 namespace Yodeller.Application.Tests.Helpers;
 
-internal class StubMessageProducer : IMessageProducer
+internal class StubMessageProducer : IMessageProducer<BaseMessage>
 {
-    private readonly List<DownloadRequest> _downloadRequests = new();
+    private readonly List<BaseMessage> _downloadRequests = new();
 
     public IEnumerable<DownloadRequest> GetAll() => throw new NotImplementedException();
 
-    public void Produce(DownloadRequest request) => _downloadRequests.Add(request);
+    public IReadOnlyList<DownloadRequest> GetRegisteredDownloadRequests() => _downloadRequests
+        .OfType<RequestedNewDownload>()
+        .Select(message => message.Request)
+        .ToArray();
 
-    public IReadOnlyList<DownloadRequest> GetRegisteredDownloadRequests() => _downloadRequests;
+    public void Produce(BaseMessage message) => _downloadRequests.Add(message);
 }

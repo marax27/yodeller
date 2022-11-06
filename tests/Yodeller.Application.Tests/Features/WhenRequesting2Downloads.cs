@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Moq;
 using Yodeller.Application.Features;
+using Yodeller.Application.Messages;
 using Yodeller.Application.Models;
 using Yodeller.Application.Ports;
 using Yodeller.Application.Tests.Helpers;
@@ -15,7 +16,7 @@ public class WhenRequesting2Downloads
     private readonly DateTime _firstRequestTime = new(2022, 11, 15, 23, 59, 57);
     private readonly DateTime _otherRequestTime = new(2022, 11, 16, 0, 0, 1);
 
-    private readonly Mock<IMessageProducer> _producerMock = new();
+    private readonly Mock<IMessageProducer<BaseMessage>> _producerMock = new();
 
     private readonly StubClock _stubClock;
 
@@ -32,7 +33,7 @@ public class WhenRequesting2Downloads
         await sut.Handle(_firstCommand, CancellationToken.None);
         await sut.Handle(_otherCommand, CancellationToken.None);
 
-        _producerMock.Verify(mock => mock.Produce(It.IsAny<DownloadRequest>()), Times.Exactly(2));
+        _producerMock.Verify(mock => mock.Produce(It.IsAny<BaseMessage>()), Times.Exactly(2));
     }
 
     [Fact]
