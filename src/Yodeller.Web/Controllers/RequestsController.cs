@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Yodeller.Web.Features;
 
@@ -25,11 +24,5 @@ public class RequestsController : ControllerBase
     public Task Post(NewRequestDto request)
     {
         throw new NotImplementedException(nameof(Post));
-    }
-
-    [HttpPatch("{requestId}")]
-    public Task Patch(string requestId, JsonPatchDocument<EditRequestDto> requestPatch)
-    {
-        throw new NotImplementedException(nameof(Patch));
     }
 }
