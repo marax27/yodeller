@@ -1,5 +1,6 @@
-using Microsoft.AspNetCore.JsonPatch;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Yodeller.Application.Features;
 using Yodeller.Web.Features;
 
 namespace Yodeller.Web.Controllers;
@@ -8,11 +9,13 @@ namespace Yodeller.Web.Controllers;
 [Route("[controller]")]
 public class RequestsController : ControllerBase
 {
+    private readonly IMediator _mediator;
     private readonly ILogger<RequestsController> _logger;
 
-    public RequestsController(ILogger<RequestsController> logger)
+    public RequestsController(IMediator mediator, ILogger<RequestsController> logger)
     {
         _logger = logger;
+        _mediator = mediator;
     }
 
     [HttpGet]
@@ -22,14 +25,12 @@ public class RequestsController : ControllerBase
     }
 
     [HttpPost]
-    public Task Post(NewRequestDto request)
+    public async Task<IActionResult> Post(NewRequestDto request)
     {
-        throw new NotImplementedException(nameof(Post));
-    }
+        var command = new RequestDownloadCommand(request.MediaLocator);
 
-    [HttpPatch("{requestId}")]
-    public Task Patch(string requestId, JsonPatchDocument<EditRequestDto> requestPatch)
-    {
-        throw new NotImplementedException(nameof(Patch));
+        await _mediator.Send(command);
+
+        return NoContent();
     }
 }

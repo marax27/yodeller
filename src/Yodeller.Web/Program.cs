@@ -1,10 +1,18 @@
+using MediatR;
+using Yodeller.Application;
+using Yodeller.Application.Ports;
+using Yodeller.Infrastructure.Adapters;
 using Yodeller.Web.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddMediatR(typeof(ApplicationLayerDependencies).Assembly);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddTransient<IClock, BasicClock>();
+builder.Services.AddSingleton<IRequestRepository, InMemoryRequestRepository>();
 
 var app = builder.Build();
 
