@@ -1,6 +1,7 @@
 using MediatR;
 using Yodeller.Application;
 using Yodeller.Application.Ports;
+using Yodeller.Infrastructure.Adapters;
 using Yodeller.Web.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +11,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddTransient<IClock, QuickAndDirtyClock>();
+builder.Services.AddTransient<IClock, BasicClock>();
+builder.Services.AddSingleton<IRequestRepository, InMemoryRequestRepository>();
 
 var app = builder.Build();
 
@@ -28,8 +30,3 @@ app.MapControllers();
 app.Run();
 
 public partial class Program { }
-
-internal class QuickAndDirtyClock : IClock
-{
-    public DateTime GetNow() => DateTime.Now;
-}

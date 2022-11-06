@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Yodeller.Application\Yodeller.Application.csproj" />
+    <ProjectReference Include="..\Yodeller.Infrastructure\Yodeller.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
