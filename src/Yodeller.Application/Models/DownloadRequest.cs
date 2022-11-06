@@ -7,7 +7,7 @@ public enum DownloadRequestStatus
 
 public record DownloadRequest(
     string Id,
-    DateTimeOffset RequestedTime,
-    string MediaId,
+    DateTime RequestedTime,
+    string MediaLocator,
     DownloadRequestStatus Status
 );
