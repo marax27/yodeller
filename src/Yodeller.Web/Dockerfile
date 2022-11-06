@@ -2,10 +2,12 @@ FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /app
 EXPOSE 80
 
+RUN mkdir /out
+
 # Install necessary dependencies
 RUN apt update && apt -y upgrade
 
-RUN apt install -y ffmpeg curl
+RUN apt install -y python3 ffmpeg curl
 
 RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp
 RUN chmod a+rx /usr/local/bin/yt-dlp

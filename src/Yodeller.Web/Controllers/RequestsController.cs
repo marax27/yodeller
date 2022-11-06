@@ -24,8 +24,18 @@ public class RequestsController : ControllerBase
         throw new NotImplementedException(nameof(Get));
     }
 
+    [HttpGet("{mediaLocator}")]
+    public async Task<IActionResult> RequestByGet([FromRoute] string mediaLocator)
+    {
+        var command = new RequestDownloadCommand(mediaLocator);
+
+        await _mediator.Send(command);
+
+        return NoContent();
+    }
+
     [HttpPost]
-    public async Task<IActionResult> Post(NewRequestDto request)
+    public async Task<IActionResult> RequestByPost([FromBody] NewRequestDto request)
     {
         var command = new RequestDownloadCommand(request.MediaLocator);
 

@@ -4,7 +4,7 @@ using Yodeller.Application.Models;
 using Yodeller.Web.Features;
 using Yodeller.Web.Tests.Helpers;
 
-namespace Yodeller.Web.Tests.Api;
+namespace Yodeller.Web.Tests.Api.RequestDownload;
 
 public class WhenPostingRequest : IClassFixture<TestApplication>
 {

@@ -1,0 +1,10 @@
+version: "3.9"
+services:
+  yodeller.api:
+    build:
+      context: .
+      dockerfile: ./src/Yodeller.Web/Dockerfile
+    ports:
+      - "50500:80"
+    volumes:
+      - c:/shared/yodeller:/out
