@@ -100,7 +100,7 @@ const RequestTableModule = {
         dto.history
       ),
     ];
-    const rowClass = dto.status.toLowerCase() + "-entry";
+    const rowClass = dto.status.toLowerCase().replace(" ", "-") + "-entry";
 
     return ComponentBuilder.create("tr", [rowClass], cells);
   },
@@ -161,6 +161,46 @@ const RequestTableModule = {
     return ComponentBuilder.create("td", [], [container]);
   },
 };
+
+function validateForm() {
+  const form = document.forms["requestDownloadForm"];
+
+  const url = form["url"].value;
+  const pass = url !== "";
+
+  const paragraph = document.querySelector(
+    "#requestDownloadForm .validation-paragraph"
+  );
+  paragraph.style.display = pass ? "none" : null;
+
+  if (!pass) {
+    paragraph.querySelector(".validation-message").textContent =
+      "Enter media ID.";
+  }
+
+  return pass;
+}
+
+function postMediaRequest(mediaType) {
+  if (!validateForm()) return false;
+
+  const requestBody = {
+    mediaLocator: document.forms["requestDownloadForm"]["url"].value,
+    audioOnly: mediaType === "audio",
+  };
+
+  fetch("/requests", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(requestBody),
+  })
+    .then(() => setTimeout(() => RequestTableModule.updateTable(), 200))
+    .catch((err) => console.error("failed to submit a video request: " + err));
+
+  return false;
+}
 
 function main() {
   RequestTableModule.updateTable();

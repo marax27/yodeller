@@ -96,7 +96,7 @@
                   <div class="buttons">
                     <button
                       type="submit"
-                      onclick="javascript: form.action='/exact'; return validateForm();"
+                      onclick="javascript: return postMediaRequest('video');"
                       class="button is-info"
                       title="Request a video (+audio) download."
                     >
@@ -107,7 +107,7 @@
                     </button>
                     <button
                       type="submit"
-                      onclick="javascript: form.action='/audio'; return validateForm();"
+                      onclick="javascript: return postMediaRequest('audio');"
                       class="button is-info"
                       title="Request an audio-only download."
                     >
