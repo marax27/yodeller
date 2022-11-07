@@ -39,6 +39,9 @@ app.UseMiddleware<CustomExceptionHandlingMiddleware>();
 
 app.MapControllers();
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.Run();
 
 public partial class Program { }
