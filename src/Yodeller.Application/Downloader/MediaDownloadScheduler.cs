@@ -37,19 +37,28 @@ public class MediaDownloadScheduler
 
         _requestsRepository.UpdateStatus(request.Id, DownloadRequestStatus.InProgress);
 
+        var downloadSuccessful = false;
+
         try
         {
             _logger.LogInformation("Starting download of '{MediaLocator}'...", request.MediaLocator);
 
-            _downloader.Download(request.MediaLocator);
+            downloadSuccessful = _downloader.Download(request.MediaLocator);
 
-            _logger.LogInformation("Medium '{MediaLocator}' downloaded successfully.", request.MediaLocator);
-            _requestsRepository.UpdateStatus(request.Id, DownloadRequestStatus.Completed);
+            _logger.LogInformation("Medium '{MediaLocator}' {Message}.",
+                request.MediaLocator,
+                downloadSuccessful ? "downloaded successfully." : "failed to download.");
         }
         catch (Exception exc)
         {
-            _logger.LogError(exc, "Failed to download a medium '{MediaLocator}'.", request.MediaLocator);
-            _requestsRepository.UpdateStatus(request.Id, DownloadRequestStatus.Failed);
+            _logger.LogError(exc, "Error while trying to download a medium '{MediaLocator}'.", request.MediaLocator);
+        }
+        finally
+        {
+            var newStatus = downloadSuccessful
+                ? DownloadRequestStatus.Completed
+                : DownloadRequestStatus.Failed;
+            _requestsRepository.UpdateStatus(request.Id, newStatus);
         }
     }
 
