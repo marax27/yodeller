@@ -8,6 +8,7 @@ public record GetAllRequestsQuery : IRequest<GetAllRequestsQuery.Result>
     public record DownloadRequestDto(
         string Id,
         string MediaLocator,
+        bool AudioOnly,
         string Status
     );
 
@@ -46,6 +47,7 @@ public class GetAllRequestsQueryHandler : IRequestHandler<GetAllRequestsQuery, G
     private static GetAllRequestsQuery.DownloadRequestDto Map(DownloadRequest model) => new(
         model.Id,
         model.MediaLocator,
+        model.AudioOnly,
         model.Status switch
         {
             DownloadRequestStatus.New => "New",

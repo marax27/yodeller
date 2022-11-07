@@ -92,9 +92,9 @@ const RequestTableModule = {
     const cells = [
       this._createTextCell(dto.mediaLocator),
       this._createStatusCell(dto.status),
-      this._createTextCell(dto.mediaType),
+      this._createTextCell(dto.audioOnly ? "Audio" : "Video"),
       this._createActionsCell(
-        dto.requestId,
+        dto.id,
         dto.mediaLocator,
         dto.status === "New",
         dto.history

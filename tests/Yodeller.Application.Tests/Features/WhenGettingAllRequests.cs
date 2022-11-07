@@ -41,8 +41,8 @@ public class WhenGettingAllRequests
             new GetAllRequestsQuery.Result(
                 new GetAllRequestsQuery.DownloadRequestDto[]
                 {
-                    new("id1", "aaa111", expectedStatus),
-                    new("id2", "http://test.test/videos?id=456", expectedStatus)
+                    new("id1", "aaa111", false, expectedStatus),
+                    new("id2", "http://test.test/videos?id=456", false, expectedStatus)
                 }
             )
         );
@@ -64,8 +64,8 @@ public class WhenGettingAllRequests
             new GetAllRequestsQuery.Result(
                 new GetAllRequestsQuery.DownloadRequestDto[]
                 {
-                    new("id1", "aaa111", "Completed"),
-                    new("id2", "http://test.test/videos?id=456", "In progress")
+                    new("id1", "aaa111", false, "Completed"),
+                    new("id2", "http://test.test/videos?id=456", false, "In progress")
                 }
             )
         );
@@ -75,7 +75,7 @@ public class WhenGettingAllRequests
         "id1",
         new DateTime(2005, 1, 1, 12, 0, 0),
         "aaa111",
-        true,
+        false,
         status
     );
 
@@ -83,7 +83,7 @@ public class WhenGettingAllRequests
         "id2",
         new DateTime(2005, 1, 2, 1, 59, 59),
         "http://test.test/videos?id=456",
-        true,
+        false,
         status
     );
 }
