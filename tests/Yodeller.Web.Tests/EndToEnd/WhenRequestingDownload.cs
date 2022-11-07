@@ -1,4 +1,7 @@
 ﻿using System.Net.Http.Json;
+using FluentAssertions.Execution;
+using Newtonsoft.Json;
+using Yodeller.Application.Features;
 using Yodeller.Web.Features;
 using Yodeller.Web.Tests.Helpers;
 
@@ -16,18 +19,39 @@ public class WhenRequestingDownload : IClassFixture<TestApplicationWithFunctiona
     [Fact]
     public async Task Given1ValidRequestThen1DownloadIsExecuted()
     {
-        await PostRequest("valid-media-locator");
-
-        await Task.Delay(1200);
-
-        _application.ExecutedDownloads.Should().HaveCount(1);
-    }
-
-    private async Task PostRequest(string givenMediaLocator)
-    {
-        var givenRequestBody = JsonContent.Create(new NewRequestDto(givenMediaLocator));
         var sut = _application.CreateClient();
 
-        await sut.PostAsync("/requests", givenRequestBody);
+        await PostRequest("valid-media-locator", sut);
+        await Task.Delay(1100);
+        var registeredRequests = await GetRegisteredRequests(sut);
+
+        using (new AssertionScope())
+        {
+            _application.ExecutedDownloads.Should().HaveCount(1);
+
+            registeredRequests.Should().NotBeNull();
+
+            registeredRequests.Should().HaveCount(1);
+
+            registeredRequests!.Single().MediaLocator.Should().Be("valid-media-locator");
+
+            registeredRequests!.Single().Status.Should().Be("Completed");
+        }
+    }
+
+    private async Task PostRequest(string givenMediaLocator, HttpClient client)
+    {
+        var givenRequestBody = JsonContent.Create(new NewRequestDto(givenMediaLocator));
+
+        await client.PostAsync("/requests", givenRequestBody);
+    }
+
+    private async Task<IReadOnlyCollection<GetAllRequestsQuery.DownloadRequestDto>?> GetRegisteredRequests(HttpClient client)
+    {
+        var response = await client.GetAsync("/requests");
+
+        var content = await response.Content.ReadAsStringAsync();
+
+        return JsonConvert.DeserializeObject<IReadOnlyCollection<GetAllRequestsQuery.DownloadRequestDto>>(content);
     }
 }

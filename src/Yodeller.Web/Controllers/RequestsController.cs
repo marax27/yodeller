@@ -19,9 +19,11 @@ public class RequestsController : ControllerBase
     }
 
     [HttpGet]
-    public Task<IReadOnlyCollection<GetRequestDto>> Get()
+    public async Task<IReadOnlyCollection<GetAllRequestsQuery.DownloadRequestDto>> Get()
     {
-        throw new NotImplementedException(nameof(Get));
+        var result = await _mediator.Send(new GetAllRequestsQuery());
+
+        return result.Requests;
     }
 
     [HttpGet("{mediaLocator}")]

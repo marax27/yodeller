@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using Yodeller.Application.Messages;
+﻿using Yodeller.Application.Messages;
 using Yodeller.Application.Models;
 
 namespace Yodeller.Application.Tests.Repository;
