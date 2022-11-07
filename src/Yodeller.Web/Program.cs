@@ -15,7 +15,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddTransient<IClock, BasicClock>();
-builder.Services.AddTransient<MediaDownloaderJob>();
+builder.Services.AddTransient<MediaDownloadScheduler>();
+builder.Services.AddTransient<IMediaDownloader, YtDlpMediaDownloader>();
 
 var messageQueue = new InMemoryMessageQueue();
 

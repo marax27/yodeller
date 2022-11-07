@@ -4,9 +4,9 @@ namespace Yodeller.Web;
 
 public class BackgroundDownloaderService : BackgroundService
 {
-    private readonly MediaDownloaderJob _job;
+    private readonly MediaDownloadScheduler _job;
 
-    public BackgroundDownloaderService(MediaDownloaderJob job) => _job = job;
+    public BackgroundDownloaderService(MediaDownloadScheduler job) => _job = job;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
