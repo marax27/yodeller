@@ -43,7 +43,9 @@ public class MediaDownloadScheduler
         {
             _logger.LogInformation("Starting download of '{MediaLocator}'...", request.MediaLocator);
 
-            downloadSuccessful = _downloader.Download(request.MediaLocator);
+            var specs = new DownloadProcessSpecification(request.MediaLocator, request.AudioOnly);
+
+            downloadSuccessful = _downloader.Download(specs);
 
             _logger.LogInformation("Medium '{MediaLocator}' {Message}.",
                 request.MediaLocator,

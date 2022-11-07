@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Yodeller.Application.Downloader;
 using Yodeller.Application.Messages;
 using Yodeller.Application.Ports;
 
@@ -23,7 +24,7 @@ public class TestApplicationWithMockedQueue : WebApplicationFactory<Program>
         services.AddSingleton(MockRequestProducer.Object);
 
         MockMediaDownloader
-            .Setup(mock => mock.Download(It.IsAny<string>()))
+            .Setup(mock => mock.Download(It.IsAny<DownloadProcessSpecification>()))
             .Returns(true);
         services.AddSingleton(MockMediaDownloader.Object);
     }

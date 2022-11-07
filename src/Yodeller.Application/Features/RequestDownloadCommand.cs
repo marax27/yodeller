@@ -6,7 +6,8 @@ using Yodeller.Application.Ports;
 namespace Yodeller.Application.Features;
 
 public record RequestDownloadCommand(
-    string MediaLocator
+    string MediaLocator,
+    bool AudioOnly
 ) : IRequest;
 
 
@@ -34,6 +35,7 @@ public class RequestDownloadCommandHandler : IRequestHandler<RequestDownloadComm
         CreateRequestId(),
         _clock.GetNow(),
         command.MediaLocator,
+        command.AudioOnly,
         DownloadRequestStatus.New
     );
 

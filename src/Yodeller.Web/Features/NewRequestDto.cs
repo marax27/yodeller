@@ -1,5 +1,6 @@
 ﻿namespace Yodeller.Web.Features;
 
 public record NewRequestDto(
-    string MediaLocator
+    string MediaLocator,
+    bool AudioOnly
 );

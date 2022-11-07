@@ -20,7 +20,8 @@ public class DownloadRequestsRepository : IDownloadRequestsRepository
 
     public void Add(DownloadRequest newRequest)
     {
-        _requests.TryAdd(newRequest.Id, newRequest);
+        if (!_requests.TryAdd(newRequest.Id, newRequest))
+            throw new ArgumentException($"Duplicate request ID: '{newRequest.Id}'");
     }
 
     public void UpdateStatus(string id, DownloadRequestStatus newStatus)
