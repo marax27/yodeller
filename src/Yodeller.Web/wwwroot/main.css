@@ -1,1 +1,112 @@
-﻿
+﻿.table-navigation-panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.table-navigation-panel > .navigation-title {
+  flex: 1 1 auto;
+}
+.table-navigation-panel > .button {
+  flex: 0 0 auto;
+}
+.table-navigation-panel > * + * {
+  margin-left: 0.5rem;
+}
+
+html,
+body,
+.main-page,
+.main-page > .container {
+  height: 100%;
+}
+
+.main-page > .container > .columns,
+.main-page > .container > .columns > .column > .container {
+  max-height: 100%;
+}
+
+.huge-icon {
+  font-size: 1.45em;
+}
+
+table.table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+table.table.has-sticky-header > thead > tr {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 1;
+}
+
+#downloadsViewTable tr.cancelled-entry {
+  color: grey;
+}
+
+@keyframes refreshIndicator {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.1;
+  }
+}
+
+.refresh-indicator {
+  -webkit-animation-name: refreshIndicator;
+  animation-name: refreshIndicator;
+
+  animation-duration: 25s;
+  animation-fill-mode: both;
+}
+
+.no-results-row {
+  text-align: center;
+}
+
+.inline-control-field {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.inline-control-field > label {
+  flex: 0 1 auto;
+  text-align: left;
+}
+.inline-control-field > input {
+  flex: 0 1 auto;
+  width: auto;
+}
+.inline-control-field > * + * {
+  margin-left: 0.5em;
+}
+
+nav.app-navbar {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 0;
+
+  padding: 0.25em;
+}
+
+nav.app-navbar > span {
+  text-align: center;
+}
+
+nav.app-navbar > * + * {
+  margin-left: 0.25em;
+}
+
+.flex-spacer {
+  flex: 1 1 0;
+}
+
+.title-logo {
+  max-height: calc(32px - 0.5em);
+}
+.title-logo > img {
+  height: 100%;
+}

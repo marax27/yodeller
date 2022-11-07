@@ -1,1 +1,172 @@
-﻿
+﻿const ComponentBuilder = {
+  create: function (tag, classNames, children) {
+    const element = document.createElement(tag);
+
+    if (classNames != null && classNames.length > 0) {
+      element.classList.add(...classNames);
+    }
+
+    if (children != null) {
+      children.forEach((child) => element.appendChild(child));
+    }
+    return element;
+  },
+  createIcon: function (iconName, isHuge) {
+    const classes = isHuge ? ["huge-icon"] : [];
+    const icon = this.create("ion-icon", classes, []);
+    icon.setAttribute("name", iconName);
+    return this.create("span", ["icon"], [icon]);
+  },
+};
+
+const TimezoneModule = {
+  toUtc: function (localHHMM) {
+    const pieces = localHHMM.split(":");
+    const timezoneOffset = new Date().getTimezoneOffset() / 60;
+    return `${this._wrapHour(parseInt(pieces[0]) + timezoneOffset)}:${this._pad(
+      pieces[1]
+    )}`;
+  },
+  toLocal: function (utcHHMM) {
+    const pieces = utcHHMM.split(":");
+    const timezoneOffset = new Date().getTimezoneOffset() / 60;
+    return `${this._wrapHour(parseInt(pieces[0]) - timezoneOffset)}:${this._pad(
+      pieces[1]
+    )}`;
+  },
+  _pad: function (num) {
+    return String(num).padStart(2, "0");
+  },
+  _wrapHour: function (hour) {
+    if (hour < 0) return hour + 24;
+    else if (hour >= 24) return hour - 24;
+    else return hour;
+  },
+};
+
+const RequestTableModule = {
+  updateTable: function () {
+    const tableBody = document.querySelector("#downloadsViewTable tbody");
+
+    fetch("/requests")
+      .then((response) => response.json())
+      .then((dtos) => {
+        dtos = Array.from(dtos).filter((dto) => dto.status !== "Forgotten");
+
+        const sortMap = {
+          New: 1,
+          Completed: 2,
+          Failed: 0,
+          Cancelled: 3,
+          "In progress": -1,
+        };
+        dtos.sort((a, b) => sortMap[a.status] - sortMap[b.status]);
+        const newRows = dtos.map((dto) => this._createRowElement(dto));
+
+        if (newRows.length === 0) {
+          newRows.push(this._createFallbackRow());
+        }
+
+        tableBody.replaceChildren(...newRows);
+      })
+      .then(() => {
+        const spinner = document.querySelector(".refresh-indicator");
+        const newSpinner = spinner.cloneNode(true);
+        spinner.parentNode.replaceChild(newSpinner, spinner);
+      })
+      .catch((err) => {
+        const title = "Failed to update requests";
+        console.error(`${title}: ${err}`);
+        renderNewAlert(`${err}`, "is-danger", title);
+      });
+  },
+  _createFallbackRow: function () {
+    const message = ComponentBuilder.create("span", [], []);
+    message.innerHTML = "<em>No registered downloads.</em>";
+    const cell = ComponentBuilder.create("td", [], [message]);
+    cell.setAttribute("colspan", 5);
+    const row = ComponentBuilder.create("tr", ["no-results-row"], [cell]);
+    return row;
+  },
+  _createRowElement: function (dto) {
+    const cells = [
+      this._createTextCell(dto.mediaLocator),
+      this._createStatusCell(dto.status),
+      this._createTextCell(dto.mediaType),
+      this._createActionsCell(
+        dto.requestId,
+        dto.mediaLocator,
+        dto.status === "New",
+        dto.history
+      ),
+    ];
+    const rowClass = dto.status.toLowerCase() + "-entry";
+
+    return ComponentBuilder.create("tr", [rowClass], cells);
+  },
+  _createTextCell: function (text) {
+    const cell = document.createElement("td");
+    cell.textContent = text;
+    return cell;
+  },
+  _createStatusCell: function (text) {
+    const classMap = {
+      "In progress": "is-info",
+      New: "is-dark",
+      Failed: "is-danger",
+      Completed: "is-success",
+      Cancelled: "is-light",
+    };
+    const classes = classMap[text] ? ["tag", classMap[text]] : ["tag"];
+
+    const tag = ComponentBuilder.create("span", classes, []);
+    tag.textContent = text;
+    tag.style.textTransform = "uppercase";
+    return ComponentBuilder.create("td", [], [tag]);
+  },
+  _createActionsCell: function (requestId, mediaLocator, canCancel, history) {
+    const commonClasses = ["button"];
+    const buttons = [];
+
+    if (history != null && history.length > 0) {
+      const entries = history.map(
+        (entry) =>
+          `[${new Date(entry.utc_time).toLocaleString()}] ${entry.description}`
+      );
+      const button = ComponentBuilder.create(
+        "button",
+        [...commonClasses, "is-black"],
+        [ComponentBuilder.createIcon("information-circle-outline", true)]
+      );
+      button.title = entries.join("\n");
+      buttons.push(button);
+    }
+
+    if (canCancel) {
+      const button = ComponentBuilder.create(
+        "button",
+        [...commonClasses, "is-danger"],
+        [ComponentBuilder.createIcon("trash", true)]
+      );
+      button.title = `Cancel "${mediaLocator}" download.`;
+      button.onclick = () => cancelDownload(requestId, mediaLocator);
+      buttons.push(button);
+    }
+
+    const container = ComponentBuilder.create(
+      "div",
+      ["buttons", "is-flex-wrap-nowrap"],
+      buttons
+    );
+    return ComponentBuilder.create("td", [], [container]);
+  },
+};
+
+function main() {
+  RequestTableModule.updateTable();
+  setInterval(() => {
+    RequestTableModule.updateTable();
+  }, 60000);
+}
+
+main();
