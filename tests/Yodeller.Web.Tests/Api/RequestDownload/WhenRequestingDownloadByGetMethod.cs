@@ -3,11 +3,11 @@ using Yodeller.Web.Tests.Helpers;
 
 namespace Yodeller.Web.Tests.Api.RequestDownload;
 
-public class WhenRequestingDownloadByGetMethod : IClassFixture<TestApplication>
+public class WhenRequestingDownloadByGetMethod : IClassFixture<TestApplicationWithMockedQueue>
 {
-    private readonly TestApplication _application;
+    private readonly TestApplicationWithMockedQueue _application;
 
-    public WhenRequestingDownloadByGetMethod(TestApplication application)
+    public WhenRequestingDownloadByGetMethod(TestApplicationWithMockedQueue application)
     {
         _application = application;
     }

@@ -1,20 +1,20 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
-using Yodeller.Application.Models;
+using Yodeller.Application.Messages;
 using Yodeller.Web.Features;
 using Yodeller.Web.Tests.Helpers;
 
 namespace Yodeller.Web.Tests.Api.RequestDownload;
 
-public class WhenApplicationFailsToStorePostedRequest : IClassFixture<TestApplication>
+public class WhenApplicationFailsToStorePostedRequest : IClassFixture<TestApplicationWithMockedQueue>
 {
-    private readonly TestApplication _application;
+    private readonly TestApplicationWithMockedQueue _application;
 
-    public WhenApplicationFailsToStorePostedRequest(TestApplication application)
+    public WhenApplicationFailsToStorePostedRequest(TestApplicationWithMockedQueue application)
     {
         _application = application;
-        _application.MockRequestRepository.Setup(mock => mock.Add(It.IsAny<DownloadRequest>()))
-            .Throws(new InvalidOperationException("Internal repository failure"));
+        _application.MockRequestProducer.Setup(mock => mock.Produce(It.IsAny<BaseMessage>()))
+            .Throws(new InvalidOperationException("Internal producer failure"));
     }
 
     [Fact]

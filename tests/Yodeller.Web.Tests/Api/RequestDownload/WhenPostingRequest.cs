@@ -1,16 +1,16 @@
 using System.Net;
 using System.Net.Http.Json;
-using Yodeller.Application.Models;
+using Yodeller.Application.Messages;
 using Yodeller.Web.Features;
 using Yodeller.Web.Tests.Helpers;
 
 namespace Yodeller.Web.Tests.Api.RequestDownload;
 
-public class WhenPostingRequest : IClassFixture<TestApplication>
+public class WhenPostingRequest : IClassFixture<TestApplicationWithMockedQueue>
 {
-    private readonly TestApplication _application;
+    private readonly TestApplicationWithMockedQueue _application;
 
-    public WhenPostingRequest(TestApplication application)
+    public WhenPostingRequest(TestApplicationWithMockedQueue application)
     {
         _application = application;
     }
@@ -28,12 +28,13 @@ public class WhenPostingRequest : IClassFixture<TestApplication>
     [Theory]
     [InlineData("9999")]
     [InlineData("http://sample-media-page.com/videos?id=444444")]
-    public async Task GivenValidRequestThenRepositoryReceivedExpectedRequest(string givenMediaLocator)
+    public async Task GivenValidRequestThenProducerReceivedExpectedRequest(string givenMediaLocator)
     {
         var response = await PostRequest(givenMediaLocator);
 
-        _application.MockRequestRepository
-            .Verify(mock => mock.Add(It.Is<DownloadRequest>(request => request.MediaLocator == givenMediaLocator)), Times.Once);
+        _application.MockRequestProducer
+            .Verify(mock => mock.Produce(It.Is<RequestedNewDownload>(
+                message => message.Request.MediaLocator == givenMediaLocator)), Times.Once);
     }
 
     private async Task<HttpResponseMessage> PostRequest(string givenMediaLocator)

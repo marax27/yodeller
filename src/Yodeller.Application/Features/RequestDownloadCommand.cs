@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Yodeller.Application.Messages;
 using Yodeller.Application.Models;
 using Yodeller.Application.Ports;
 
@@ -11,12 +12,12 @@ public record RequestDownloadCommand(
 
 public class RequestDownloadCommandHandler : IRequestHandler<RequestDownloadCommand>
 {
-    private readonly IRequestRepository _requestRepository;
+    private readonly IMessageProducer<BaseMessage> _messageProducer;
     private readonly IClock _clock;
 
-    public RequestDownloadCommandHandler(IRequestRepository requestRepository, IClock clock)
+    public RequestDownloadCommandHandler(IMessageProducer<BaseMessage> messageProducer, IClock clock)
     {
-        _requestRepository = requestRepository ?? throw new ArgumentNullException(nameof(requestRepository));
+        _messageProducer = messageProducer ?? throw new ArgumentNullException(nameof(messageProducer));
         _clock = clock ?? throw new ArgumentNullException(nameof(clock));
     }
 
@@ -24,7 +25,7 @@ public class RequestDownloadCommandHandler : IRequestHandler<RequestDownloadComm
     {
         var model = MapToModel(command);
 
-        _requestRepository.Add(model);
+        _messageProducer.Produce(new RequestedNewDownload(model));
 
         return Task.FromResult(Unit.Value);
     }
