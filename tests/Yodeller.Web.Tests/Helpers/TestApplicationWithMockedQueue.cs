@@ -5,9 +5,11 @@ using Yodeller.Application.Ports;
 
 namespace Yodeller.Web.Tests.Helpers;
 
-public class TestApplication : WebApplicationFactory<Program>
+public class TestApplicationWithMockedQueue : WebApplicationFactory<Program>
 {
     public Mock<IMessageProducer<BaseMessage>> MockRequestProducer { get; } = new();
+
+    public Mock<IMediaDownloader> MockMediaDownloader { get; } = new();
 
     protected override IHost CreateHost(IHostBuilder builder)
     {
@@ -19,6 +21,10 @@ public class TestApplication : WebApplicationFactory<Program>
     private void RegisterTestServices(IServiceCollection services)
     {
         services.AddSingleton(MockRequestProducer.Object);
+
+        MockMediaDownloader
+            .Setup(mock => mock.Download(It.IsAny<string>()))
+            .Returns(true);
+        services.AddSingleton(MockMediaDownloader.Object);
     }
 }
-

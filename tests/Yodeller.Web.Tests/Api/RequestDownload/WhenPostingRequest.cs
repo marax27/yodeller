@@ -6,11 +6,11 @@ using Yodeller.Web.Tests.Helpers;
 
 namespace Yodeller.Web.Tests.Api.RequestDownload;
 
-public class WhenPostingRequest : IClassFixture<TestApplication>
+public class WhenPostingRequest : IClassFixture<TestApplicationWithMockedQueue>
 {
-    private readonly TestApplication _application;
+    private readonly TestApplicationWithMockedQueue _application;
 
-    public WhenPostingRequest(TestApplication application)
+    public WhenPostingRequest(TestApplicationWithMockedQueue application)
     {
         _application = application;
     }

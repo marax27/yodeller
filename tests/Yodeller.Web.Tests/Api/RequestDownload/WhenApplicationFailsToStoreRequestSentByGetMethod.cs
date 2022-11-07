@@ -4,11 +4,11 @@ using Yodeller.Web.Tests.Helpers;
 
 namespace Yodeller.Web.Tests.Api.RequestDownload;
 
-public class WhenApplicationFailsToStoreRequestSentByGetMethod : IClassFixture<TestApplication>
+public class WhenApplicationFailsToStoreRequestSentByGetMethod : IClassFixture<TestApplicationWithMockedQueue>
 {
-    private readonly TestApplication _application;
+    private readonly TestApplicationWithMockedQueue _application;
 
-    public WhenApplicationFailsToStoreRequestSentByGetMethod(TestApplication application)
+    public WhenApplicationFailsToStoreRequestSentByGetMethod(TestApplicationWithMockedQueue application)
     {
         _application = application;
         _application.MockRequestProducer.Setup(mock => mock.Produce(It.IsAny<BaseMessage>()))

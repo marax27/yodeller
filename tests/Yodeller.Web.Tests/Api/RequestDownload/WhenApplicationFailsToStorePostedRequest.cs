@@ -6,11 +6,11 @@ using Yodeller.Web.Tests.Helpers;
 
 namespace Yodeller.Web.Tests.Api.RequestDownload;
 
-public class WhenApplicationFailsToStorePostedRequest : IClassFixture<TestApplication>
+public class WhenApplicationFailsToStorePostedRequest : IClassFixture<TestApplicationWithMockedQueue>
 {
-    private readonly TestApplication _application;
+    private readonly TestApplicationWithMockedQueue _application;
 
-    public WhenApplicationFailsToStorePostedRequest(TestApplication application)
+    public WhenApplicationFailsToStorePostedRequest(TestApplicationWithMockedQueue application)
     {
         _application = application;
         _application.MockRequestProducer.Setup(mock => mock.Produce(It.IsAny<BaseMessage>()))
