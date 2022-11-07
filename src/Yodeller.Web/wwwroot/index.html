@@ -1,0 +1,201 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Yodeller</title>
+    <link rel="stylesheet" href="/bulma.min.css" />
+    <link rel="stylesheet" href="/main.css" />
+  </head>
+  <body>
+    <nav
+      class="app-navbar has-background-black has-text-white is-flex is-flex-direction-row is-align-content-center"
+    >
+      <a href="/" title="Yodeller" class="title-logo">
+        <img src="/favicon.ico" alt="Yodeller" />
+      </a>
+      <div class="flex-spacer"></div>
+      <span class="tag is-black">System check:</span>
+      <span
+        class="tag"
+        id="downloaderStatusTag"
+        title="Indicates the availability of a video downloader. If it's red, the downloader is not installed - download feature will not work."
+        >Downloader</span
+      >
+      <span
+        class="tag"
+        id="postProcessingStatusTag"
+        title="Indicates the availability of ffmpeg. If it's yellow, ffmpeg is not installed - download feature probably will work, but higher resolution video may be unavailable."
+        >Post-processing</span
+      >
+      <span
+        class="tag"
+        id="diskSpaceStatusTag"
+        title="Indicates how much free space is left. If it's yellow, there's &lt;25% free space left."
+        >Disk space</span
+      >
+    </nav>
+    <section class="section main-page">
+      <div class="columns">
+        <div class="column is-4">
+          <div class="card block" id="formCard">
+            <div class="card-content">
+              <form
+                method="post"
+                name="requestDownloadForm"
+                id="requestDownloadForm"
+              >
+                <div class="field">
+                  <label for="url" class="label">Media ID:</label>
+                  <div class="control has-icons-left">
+                    <input
+                      name="url"
+                      type="text"
+                      value=""
+                      placeholder="Media ID"
+                      class="input"
+                    />
+                    <span class="icon is-left">
+                      <ion-icon name="link"></ion-icon>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="field">
+                  <div class="control">
+                    <label
+                      for="subtitles"
+                      class="radio"
+                      title="Download video + subtitles."
+                    >
+                      <input type="checkbox" name="subtitles" id="subtitles" />
+                      With subtitles
+                    </label>
+                  </div>
+                </div>
+
+                <div
+                  class="icon-text validation-paragraph"
+                  style="display: none"
+                >
+                  <span class="icon has-text-danger">
+                    <ion-icon name="warning" class="huge-icon"></ion-icon>
+                  </span>
+                  <span class="validation-message"></span>
+                </div>
+
+                <input type="hidden" name="safeHoursStart" />
+                <input type="hidden" name="safeHoursEnd" />
+
+                <div class="field">
+                  <p><strong>Download:</strong></p>
+                </div>
+
+                <div class="field is-grouped">
+                  <div class="buttons">
+                    <button
+                      type="submit"
+                      onclick="javascript: return postMediaRequest('video');"
+                      class="button is-info"
+                      title="Request a video (+audio) download."
+                    >
+                      <span class="icon">
+                        <ion-icon name="videocam"></ion-icon>
+                      </span>
+                      <span>Video</span>
+                    </button>
+                    <button
+                      type="submit"
+                      onclick="javascript: return postMediaRequest('audio');"
+                      class="button is-info"
+                      title="Request an audio-only download."
+                    >
+                      <span class="icon">
+                        <ion-icon name="musical-note"></ion-icon>
+                      </span>
+                      <span>Audio</span>
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="column is-8">
+          <div style="display: flex; flex-direction: column; max-height: 100%">
+            <div class="card">
+              <div class="card-content">
+                <div class="table-navigation-panel">
+                  <span class="navigation-title is-size-5"
+                    >Registered downloads</span
+                  >
+
+                  <div
+                    title="Indicates whether the table has been refreshed recently."
+                  >
+                    <button class="button is-static is-outlined is-black">
+                      <span class="icon refresh-indicator">
+                        <ion-icon name="refresh" class="huge-icon"></ion-icon>
+                      </span>
+                    </button>
+                  </div>
+
+                  <button
+                    class="button is-info"
+                    onclick="RequestTableModule.updateTable()"
+                    title="Refresh the Downloads table manually."
+                  >
+                    <span class="icon">
+                      <ion-icon name="refresh"></ion-icon>
+                    </span>
+                    <span>Refresh</span>
+                  </button>
+                  <button
+                    class="button is-black"
+                    onclick="clearFinishedTasks()"
+                    title="Hide finished (completed, failed, cancelled) downloads."
+                  >
+                    <span class="icon">
+                      <ion-icon name="trash"></ion-icon>
+                    </span>
+                    <span>Clean up finished</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="card table-container"
+              style="overflow-y: auto; border: solid 1px #dbdbdb"
+            >
+              <table
+                class="table is-hoverable is-fullwidth has-sticky-header"
+                id="downloadsViewTable"
+              >
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Status</th>
+                    <th>Type</th>
+                    <th>Additional</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@5.0.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule=""
+      src="https://unpkg.com/ionicons@5.0.0/dist/ionicons/ionicons.js"
+    ></script>
+    <script src="/main.js"></script>
+  </body>
+</html>

@@ -1,4 +1,5 @@
-﻿using Yodeller.Application.Models;
+﻿using System.Collections.Concurrent;
+using Yodeller.Application.Models;
 
 namespace Yodeller.Application;
 
@@ -15,11 +16,11 @@ public interface IDownloadRequestsRepository
 
 public class DownloadRequestsRepository : IDownloadRequestsRepository
 {
-    private readonly Dictionary<string, DownloadRequest> _requests = new();
+    private readonly ConcurrentDictionary<string, DownloadRequest> _requests = new();
 
     public void Add(DownloadRequest newRequest)
     {
-        _requests.Add(newRequest.Id, newRequest);
+        _requests.TryAdd(newRequest.Id, newRequest);
     }
 
     public void UpdateStatus(string id, DownloadRequestStatus newStatus)
