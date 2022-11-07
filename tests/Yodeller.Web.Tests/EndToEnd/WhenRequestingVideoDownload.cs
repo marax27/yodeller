@@ -4,14 +4,13 @@ using Newtonsoft.Json;
 using Yodeller.Application.Features;
 using Yodeller.Web.Features;
 using Yodeller.Web.Tests.Helpers;
-
 namespace Yodeller.Web.Tests.EndToEnd;
 
-public class WhenRequestingDownload : IClassFixture<TestApplicationWithFunctionalQueue>
+public class WhenRequestingVideoDownload : IClassFixture<TestApplicationWithFunctionalQueue>
 {
     private readonly TestApplicationWithFunctionalQueue _application;
 
-    public WhenRequestingDownload(TestApplicationWithFunctionalQueue application)
+    public WhenRequestingVideoDownload(TestApplicationWithFunctionalQueue application)
     {
         _application = application;
     }
@@ -29,6 +28,8 @@ public class WhenRequestingDownload : IClassFixture<TestApplicationWithFunctiona
         {
             _application.ExecutedDownloads.Should().HaveCount(1);
 
+            _application.ExecutedDownloads.Single().AudioOnly.Should().Be(false);
+
             registeredRequests.Should().NotBeNull();
 
             registeredRequests.Should().HaveCount(1);
@@ -41,7 +42,7 @@ public class WhenRequestingDownload : IClassFixture<TestApplicationWithFunctiona
 
     private async Task PostRequest(string givenMediaLocator, HttpClient client)
     {
-        var givenRequestBody = JsonContent.Create(new NewRequestDto(givenMediaLocator));
+        var givenRequestBody = JsonContent.Create(new NewRequestDto(givenMediaLocator, false));
 
         await client.PostAsync("/requests", givenRequestBody);
     }

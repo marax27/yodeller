@@ -8,8 +8,8 @@ namespace Yodeller.Application.Tests.Features;
 
 public class WhenRequesting2Downloads
 {
-    private readonly RequestDownloadCommand _firstCommand = new("http://example-media-page.com?id=123");
-    private readonly RequestDownloadCommand _otherCommand = new("http://videos.abcd/sample");
+    private readonly RequestDownloadCommand _firstCommand = new("http://example-media-page.com?id=123", true);
+    private readonly RequestDownloadCommand _otherCommand = new("http://videos.abcd/sample", false);
 
     private readonly DateTime _firstRequestTime = new(2022, 11, 15, 23, 59, 57);
     private readonly DateTime _otherRequestTime = new(2022, 11, 16, 0, 0, 1);
@@ -46,11 +46,13 @@ public class WhenRequesting2Downloads
         var actualFirst = stubProducer.GetRegisteredDownloadRequests().First();
         actualFirst.MediaLocator.Should().Be(_firstCommand.MediaLocator);
         actualFirst.RequestedTime.Should().Be(_firstRequestTime);
+        actualFirst.AudioOnly.Should().Be(true);
         actualFirst.Status.Should().Be(DownloadRequestStatus.New);
 
         var actualOther = stubProducer.GetRegisteredDownloadRequests().Last();
         actualOther.MediaLocator.Should().Be(_otherCommand.MediaLocator);
         actualOther.RequestedTime.Should().Be(_otherRequestTime);
+        actualOther.AudioOnly.Should().Be(false);
         actualOther.Status.Should().Be(DownloadRequestStatus.New);
     }
 

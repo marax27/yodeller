@@ -1,6 +1,8 @@
-﻿namespace Yodeller.Application.Ports;
+﻿using Yodeller.Application.Downloader;
+
+namespace Yodeller.Application.Ports;
 
 public interface IMediaDownloader
 {
-    bool Download(string mediaLocator);
+    bool Download(DownloadProcessSpecification what);
 }

@@ -9,6 +9,7 @@ public class WhenInvokingRequestedNewDownloadMessage
         "id1",
         new DateTime(1995, 10, 21, 19, 59, 30),
         "http://test-media-page.test?id=1234",
+        true,
         DownloadRequestStatus.New
     );
 

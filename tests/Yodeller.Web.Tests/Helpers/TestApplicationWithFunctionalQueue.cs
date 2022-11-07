@@ -1,14 +1,15 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Yodeller.Application.Downloader;
 using Yodeller.Application.Ports;
 
 namespace Yodeller.Web.Tests.Helpers;
 
 public class TestApplicationWithFunctionalQueue : WebApplicationFactory<Program>
 {
-    private readonly List<string> _executedDownloads = new();
+    private readonly List<DownloadProcessSpecification> _executedDownloads = new();
 
-    public IReadOnlyCollection<string> ExecutedDownloads => _executedDownloads;
+    public IReadOnlyCollection<DownloadProcessSpecification> ExecutedDownloads => _executedDownloads;
 
     public Mock<IMediaDownloader> MockMediaDownloader { get; } = new();
 
@@ -22,14 +23,14 @@ public class TestApplicationWithFunctionalQueue : WebApplicationFactory<Program>
     private void RegisterTestServices(IServiceCollection services)
     {
         MockMediaDownloader
-            .Setup(mock => mock.Download(It.IsAny<string>()))
+            .Setup(mock => mock.Download(It.IsAny<DownloadProcessSpecification>()))
             .Returns(OnDownloadRequest);
         services.AddSingleton(MockMediaDownloader.Object);
     }
 
-    private bool OnDownloadRequest(string mediaLocator)
+    private bool OnDownloadRequest(DownloadProcessSpecification what)
     {
-        _executedDownloads.Add(mediaLocator);
+        _executedDownloads.Add(what);
         return true;
     }
 }

@@ -75,6 +75,7 @@ public class WhenGettingAllRequests
         "id1",
         new DateTime(2005, 1, 1, 12, 0, 0),
         "aaa111",
+        true,
         status
     );
 
@@ -82,6 +83,7 @@ public class WhenGettingAllRequests
         "id2",
         new DateTime(2005, 1, 2, 1, 59, 59),
         "http://test.test/videos?id=456",
+        true,
         status
     );
 }
