@@ -1,5 +1,5 @@
-﻿using System.Diagnostics;
-using Yodeller.Application.Ports;
+﻿using Yodeller.Application.Ports;
+using Yodeller.Infrastructure.Utilities;
 
 namespace Yodeller.Infrastructure.Adapters;
 
@@ -7,21 +7,10 @@ public class ApplicationAvailableEnvironmentCheck : IApplicationAvailableEnviron
 {
     public async ValueTask<bool> IsAvailable(string applicationName)
     {
-        Process process = new Process()
-        {
-            StartInfo = new()
-            {
-                FileName = applicationName,
-                Arguments = "--help",
-                UseShellExecute = false,
-                CreateNoWindow = true,
-                RedirectStandardOutput = false
-            }
-        };
+        var execution = new ProcessExecution();
 
-        process.Start();
-        await process.WaitForExitAsync();
+        var result = await execution.Run(new(applicationName, "--help", null));
 
-        return process.ExitCode == 0;
+        return result.ExitCode == 0;
     }
 }

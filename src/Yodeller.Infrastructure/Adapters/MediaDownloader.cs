@@ -1,6 +1,6 @@
-﻿using System.Diagnostics;
-using Yodeller.Application.Downloader;
+﻿using Yodeller.Application.Downloader;
 using Yodeller.Application.Ports;
+using Yodeller.Infrastructure.Utilities;
 
 namespace Yodeller.Infrastructure.Adapters;
 
@@ -12,23 +12,10 @@ public class YtDlpMediaDownloader : IMediaDownloader
             ? $"-f \"bestaudio/best\" -ciw -v --extract-audio --audio-quality 0 --audio-format mp3 {what.MediaLocator}"
             : what.MediaLocator;
 
-        var process = new Process
-        {
-            StartInfo = new ProcessStartInfo
-            {
-                FileName = "yt-dlp",
-                Arguments = arguments,
-                UseShellExecute = false,
-                CreateNoWindow = true,
-                RedirectStandardOutput = false,
-                WorkingDirectory = "/out"
-            }
-        };
+        var execution = new ProcessExecution();
 
-        process.Start();
-        
-        process.WaitForExit();
+        var result = execution.Run(new("yt-dlp", arguments, "/out")).Result;
 
-        return process.ExitCode == 0;
+        return result.ExitCode == 0;
     }
 }
