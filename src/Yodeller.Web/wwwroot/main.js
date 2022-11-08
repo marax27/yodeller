@@ -54,11 +54,7 @@ const EnvironmentDetailsModule = {
     const freeSpace = environmentDto.availableDiskSpacePercentage;
     this._updateTag(
       "diskSpaceStatusTag",
-      freeSpace > 0.25
-        ? "is-success"
-        : freeSpace > 0.05
-        ? "is-warning"
-        : "is-danger"
+      freeSpace > 25 ? "is-success" : freeSpace > 5 ? "is-warning" : "is-danger"
     );
 
     this._updateTag(

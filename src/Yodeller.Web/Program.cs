@@ -18,8 +18,8 @@ builder.Services.AddTransient<IClock, BasicClock>();
 builder.Services.AddTransient<MediaDownloadScheduler>();
 builder.Services.AddTransient<IMediaDownloader, YtDlpMediaDownloader>();
 
-builder.Services.AddTransient<IDiskSpaceEnvironmentCheck, DumbDiskSpaceEnvironmentCheck>();
-builder.Services.AddTransient<IApplicationAvailableEnvironmentCheck, DumbApplicationAvailableEnvironmentCheck>();
+builder.Services.AddTransient<IDiskSpaceEnvironmentCheck, DiskSpaceEnvironmentCheck>();
+builder.Services.AddTransient<IApplicationAvailableEnvironmentCheck, ApplicationAvailableEnvironmentCheck>();
 
 var messageQueue = new InMemoryMessageQueue();
 
