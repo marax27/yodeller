@@ -196,7 +196,7 @@ function postMediaRequest(mediaType) {
     },
     body: JSON.stringify(requestBody),
   })
-    .then(() => setTimeout(() => RequestTableModule.updateTable(), 200))
+    .then(() => setTimeout(() => RequestTableModule.updateTable(), 300))
     .catch((err) => console.error("failed to submit a video request: " + err));
 
   return false;

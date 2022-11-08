@@ -21,7 +21,7 @@ public class WhenRequestingVideoDownload : IClassFixture<TestApplicationWithFunc
         var sut = _application.CreateClient();
 
         await PostRequest("valid-media-locator", sut);
-        await Task.Delay(1100);
+        await Task.Delay(300);
         var registeredRequests = await GetRegisteredRequests(sut);
 
         using (new AssertionScope())
