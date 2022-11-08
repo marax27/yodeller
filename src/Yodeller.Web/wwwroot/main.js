@@ -44,6 +44,37 @@ const TimezoneModule = {
   },
 };
 
+const EnvironmentDetailsModule = {
+  initialise: function () {
+    fetch("/environment", { method: "GET" })
+      .then((response) => response.json())
+      .then((dto) => this._process(dto));
+  },
+  _process: function (environmentDto) {
+    const freeSpace = environmentDto.availableDiskSpacePercentage;
+    this._updateTag(
+      "diskSpaceStatusTag",
+      freeSpace > 0.25
+        ? "is-success"
+        : freeSpace > 0.05
+        ? "is-warning"
+        : "is-danger"
+    );
+
+    this._updateTag(
+      "downloaderStatusTag",
+      environmentDto.downloaderAvailable ? "is-success" : "is-danger"
+    );
+    this._updateTag(
+      "postProcessingStatusTag",
+      environmentDto.postProcessingAvailable ? "is-success" : "is-warning"
+    );
+  },
+  _updateTag: function (tagId, className) {
+    document.getElementById(tagId).classList.add(className);
+  },
+};
+
 const RequestTableModule = {
   updateTable: function () {
     const tableBody = document.querySelector("#downloadsViewTable tbody");
@@ -203,6 +234,8 @@ function postMediaRequest(mediaType) {
 }
 
 function main() {
+  EnvironmentDetailsModule.initialise();
+
   RequestTableModule.updateTable();
   setInterval(() => {
     RequestTableModule.updateTable();
