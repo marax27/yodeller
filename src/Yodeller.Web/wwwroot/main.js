@@ -189,7 +189,7 @@ function validateForm() {
 
   if (!pass) {
     paragraph.querySelector(".validation-message").textContent =
-      "Enter media ID.";
+      "Enter media locator.";
   }
 
   return pass;
@@ -198,8 +198,10 @@ function validateForm() {
 function postMediaRequest(mediaType) {
   if (!validateForm()) return false;
 
+  const mediaLocatorFormField = document.forms["requestDownloadForm"]["url"];
+
   const requestBody = {
-    mediaLocator: document.forms["requestDownloadForm"]["url"].value,
+    mediaLocator: mediaLocatorFormField.value,
     audioOnly: mediaType === "audio",
   };
 
@@ -210,7 +212,10 @@ function postMediaRequest(mediaType) {
     },
     body: JSON.stringify(requestBody),
   })
-    .then(() => setTimeout(() => RequestTableModule.updateTable(), 300))
+    .then(() => {
+      mediaLocatorFormField.value = "";
+      setTimeout(() => RequestTableModule.updateTable(), 300);
+    })
     .catch((err) => console.error("failed to submit a video request: " + err));
 
   return false;

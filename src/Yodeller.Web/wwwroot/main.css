@@ -110,3 +110,7 @@ nav.app-navbar > * + * {
 .title-logo > img {
   height: 100%;
 }
+
+.has-help-text {
+  cursor: help;
+}

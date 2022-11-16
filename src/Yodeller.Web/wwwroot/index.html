@@ -18,19 +18,19 @@
       <div class="flex-spacer"></div>
       <span class="tag is-black">System check:</span>
       <span
-        class="tag"
+        class="tag has-help-text"
         id="downloaderStatusTag"
         title="Indicates the availability of a video downloader. If it's red, the downloader is not installed - download feature will not work."
         >Downloader</span
       >
       <span
-        class="tag"
+        class="tag has-help-text"
         id="postProcessingStatusTag"
         title="Indicates the availability of ffmpeg. If it's yellow, ffmpeg is not installed - download feature probably will work, but higher resolution video may be unavailable."
         >Post-processing</span
       >
       <span
-        class="tag"
+        class="tag has-help-text"
         id="diskSpaceStatusTag"
         title="Indicates how much free space is left. If it's yellow, there's &lt;25% free space left."
         >Disk space</span
@@ -47,13 +47,13 @@
                 id="requestDownloadForm"
               >
                 <div class="field">
-                  <label for="url" class="label">Media ID:</label>
+                  <label for="url" class="label">Media locator:</label>
                   <div class="control has-icons-left">
                     <input
                       name="url"
                       type="text"
                       value=""
-                      placeholder="Media ID"
+                      placeholder="Media locator"
                       class="input"
                     />
                     <span class="icon is-left">
@@ -120,7 +120,7 @@
                       <span class="icon">
                         <ion-icon name="musical-note"></ion-icon>
                       </span>
-                      <span>Audio</span>
+                      <span>Audio only</span>
                     </button>
                   </div>
                 </div>
