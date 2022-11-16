@@ -189,6 +189,18 @@ const RequestTableModule = {
   },
 };
 
+function cancelDownload(requestId, mediaLocator) {
+  const url = "/requests/" + encodeURIComponent(requestId);
+  fetch(url, { method: "DELETE" })
+    .then((response) => {
+      RequestTableModule.updateTable();
+    })
+    .catch((err) => {
+      console.error(`Failed to cancel a "${mediaLocator}" download: ${err}`);
+      console.warn(`TODO Alert: ${err}`);
+    });
+}
+
 function validateForm() {
   const form = document.forms["requestDownloadForm"];
 
