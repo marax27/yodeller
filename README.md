@@ -1,5 +1,11 @@
 # Yodeller
 
+[![.NET Build and Test](https://github.com/marax27/yodeller/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/marax27/yodeller/actions/workflows/build-and-test.yml)
+[![Docker Image Version (tag latest semver)](https://img.shields.io/docker/v/marax27/yodeller/latest?label=Docker)](https://hub.docker.com/repository/docker/marax27/yodeller)
+[![Docker Image Size (latest semver)](https://img.shields.io/docker/image-size/marax27/yodeller)](https://hub.docker.com/repository/docker/marax27/yodeller)
+
+Docker Hub: https://hub.docker.com/repository/docker/marax27/yodeller
+
 ## A simplistic UI wrapper on [yt-dlp](https://github.com/yt-dlp/yt-dlp)
 
 ![Homepage screenshot](./docs/homepage-screenshot-01.png)
