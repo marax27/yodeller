@@ -45,4 +45,15 @@ public class RequestsController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpDelete]
+    [Route("{requestId}")]
+    public async Task<IActionResult> Cancel([FromRoute] string requestId)
+    {
+        var command = new CancelDownloadCommand(requestId);
+
+        await _mediator.Send(command);
+
+        return NoContent();
+    }
 }
