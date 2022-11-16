@@ -22,7 +22,8 @@ public class WhenGettingAllRequests
     [InlineData(DownloadRequestStatus.Completed, "Completed")]
     [InlineData(DownloadRequestStatus.InProgress, "In progress")]
     [InlineData(DownloadRequestStatus.Failed, "Failed")]
-    public async Task Given2NewRequestsThenReturnExpectedRequests(DownloadRequestStatus givenStatus, string expectedStatus)
+    [InlineData(DownloadRequestStatus.Cancelled, "Cancelled")]
+    public async Task Given2RequestsWithCertainStatusThenReturnExpectedRequests(DownloadRequestStatus givenStatus, string expectedStatus)
     {
         _mockRepository.Setup(mock => mock.FindByStatus(givenStatus))
             .Returns(new[]
