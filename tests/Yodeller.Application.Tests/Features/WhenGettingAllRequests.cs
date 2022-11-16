@@ -77,6 +77,7 @@ public class WhenGettingAllRequests
         new DateTime(2005, 1, 1, 12, 0, 0),
         "aaa111",
         false,
+        Array.Empty<string>(),
         status
     );
 
@@ -85,6 +86,7 @@ public class WhenGettingAllRequests
         new DateTime(2005, 1, 2, 1, 59, 59),
         "http://test.test/videos?id=456",
         false,
+        Array.Empty<string>(),
         status
     );
 }

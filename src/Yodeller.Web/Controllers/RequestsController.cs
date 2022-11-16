@@ -29,7 +29,7 @@ public class RequestsController : ControllerBase
     [HttpGet("{mediaLocator}")]
     public async Task<IActionResult> RequestByGet([FromRoute] string mediaLocator)
     {
-        var command = new RequestDownloadCommand(mediaLocator, false);
+        var command = new RequestDownloadCommand(Array.Empty<string>(), mediaLocator, false);
 
         await _mediator.Send(command);
 
@@ -39,7 +39,10 @@ public class RequestsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> RequestByPost([FromBody] NewRequestDto request)
     {
-        var command = new RequestDownloadCommand(request.MediaLocator, request.AudioOnly);
+        var command = new RequestDownloadCommand(
+            request.SubtitlePatterns ?? Array.Empty<string>(),
+            request.MediaLocator,
+            request.AudioOnly);
 
         await _mediator.Send(command);
 

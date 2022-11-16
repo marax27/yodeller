@@ -8,8 +8,8 @@ namespace Yodeller.Application.Tests.Features;
 
 public class WhenRequesting2Downloads
 {
-    private readonly RequestDownloadCommand _firstCommand = new("http://example-media-page.com?id=123", true);
-    private readonly RequestDownloadCommand _otherCommand = new("http://videos.abcd/sample", false);
+    private readonly RequestDownloadCommand _firstCommand = new(Array.Empty<string>(), "http://example-media-page.com?id=123", true);
+    private readonly RequestDownloadCommand _otherCommand = new(Array.Empty<string>(), "http://videos.abcd/sample", false);
 
     private readonly DateTime _firstRequestTime = new(2022, 11, 15, 23, 59, 57);
     private readonly DateTime _otherRequestTime = new(2022, 11, 16, 0, 0, 1);

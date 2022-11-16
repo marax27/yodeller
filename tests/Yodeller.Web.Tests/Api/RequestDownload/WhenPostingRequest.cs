@@ -39,7 +39,7 @@ public class WhenPostingRequest : IClassFixture<TestApplicationWithMockedQueue>
 
     private async Task<HttpResponseMessage> PostRequest(string givenMediaLocator)
     {
-        var givenRequestBody = JsonContent.Create(new NewRequestDto(givenMediaLocator, false));
+        var givenRequestBody = JsonContent.Create(new NewRequestDto(Array.Empty<string>(), givenMediaLocator, false));
         var sut = _application.CreateClient();
 
         var response = await sut.PostAsync("/requests", givenRequestBody);

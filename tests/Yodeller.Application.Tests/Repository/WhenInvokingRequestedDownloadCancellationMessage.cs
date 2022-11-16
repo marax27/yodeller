@@ -1,4 +1,5 @@
 ﻿using Yodeller.Application.Messages;
+using Yodeller.Application.Models;
 using static Yodeller.Application.Models.DownloadRequestStatus;
 
 namespace Yodeller.Application.Tests.Repository;
@@ -11,16 +12,18 @@ public class WhenInvokingRequestedDownloadCancellationMessage
     private const string FailedRequestId = "1113";
     private const string NonexistentRequestId = "9999";
 
+    private readonly DateTime _sampleTime = new(2001, 10, 30, 7, 45, 0);
+
     private readonly DownloadRequestsRepository _sut = new();
 
     public WhenInvokingRequestedDownloadCancellationMessage()
     {
         var sampleTime = new DateTime(2001, 10, 30, 7, 45, 0);
 
-        _sut.Add(new(NewRequestId, sampleTime, $"http://video.page/{NewRequestId}", false, New));
-        _sut.Add(new(InProgressRequestId, sampleTime, $"http://video.page/{InProgressRequestId}", false, InProgress));
-        _sut.Add(new(CancelledRequestId, sampleTime, $"http://video.page/{CancelledRequestId}", false, Cancelled));
-        _sut.Add(new(FailedRequestId, sampleTime, $"http://video.page/{FailedRequestId}", false, Failed));
+        _sut.Add(Create(NewRequestId, New));
+        _sut.Add(Create(InProgressRequestId, InProgress));
+        _sut.Add(Create(CancelledRequestId, Cancelled));
+        _sut.Add(Create(FailedRequestId, Failed));
     }
 
     [Fact]
@@ -62,4 +65,13 @@ public class WhenInvokingRequestedDownloadCancellationMessage
 
         _sut.FindById(FailedRequestId).Status.Should().Be(Failed);
     }
+
+    private DownloadRequest Create(string requestId, DownloadRequestStatus status) => new(
+        requestId,
+        _sampleTime,
+        $"http://video.page/{requestId}",
+        false,
+        Array.Empty<string>(),
+        status
+    );
 }

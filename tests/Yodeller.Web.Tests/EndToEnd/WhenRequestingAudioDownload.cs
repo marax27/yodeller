@@ -15,19 +15,20 @@ public class WhenRequestingAudioDownload : IClassFixture<TestApplicationWithFunc
     }
 
     [Fact]
-    public async Task Given1ValidRequestThen1DownloadIsExecuted()
+    public async Task Given1ValidRequestWithNullSubtitlePatternsThen1DownloadIsExecuted()
     {
         var sut = _application.CreateClient();
 
-        await PostRequest("valid-media-locator", sut);
+        await PostRequest(null, "valid-media-locator", sut);
         await Task.Delay(300);
 
         _application.ExecutedDownloads.Single().AudioOnly.Should().BeTrue();
     }
 
-    private async Task PostRequest(string givenMediaLocator, HttpClient client)
+    private async Task PostRequest(List<string>? subtitlePatterns, string givenMediaLocator, HttpClient client)
     {
-        var givenRequestBody = JsonContent.Create(new NewRequestDto(givenMediaLocator, true));
+        var payload = new NewRequestDto(subtitlePatterns, givenMediaLocator, true);
+        var givenRequestBody = JsonContent.Create(payload);
 
         await client.PostAsync("/requests", givenRequestBody);
     }
