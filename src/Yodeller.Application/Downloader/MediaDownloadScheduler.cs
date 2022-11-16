@@ -12,6 +12,8 @@ public class MediaDownloadScheduler
     private readonly IDownloadRequestsRepository _requestsRepository;
     private readonly ILogger<MediaDownloadScheduler> _logger;
 
+    private Task? _downloadInProgress = null;
+
     public MediaDownloadScheduler(
         IMediaDownloader downloader,
         IMessageConsumer<BaseMessage> messageConsumer,
@@ -27,16 +29,27 @@ public class MediaDownloadScheduler
     public void Execute()
     {
         ConsumeAllMessages();
-        var request = FindEligibleDownloadRequest();
-        TryDownload(request);
+
+        if (_downloadInProgress is null or { IsCompleted: true })
+        {
+            RunNewDownloadTask();
+        }
     }
 
-    private void TryDownload(DownloadRequest? request)
+    private void RunNewDownloadTask()
     {
-        if (request is null) return;
+        _downloadInProgress?.Dispose();
 
-        _requestsRepository.UpdateStatus(request.Id, DownloadRequestStatus.InProgress);
+        var request = FindEligibleDownloadRequest();
+        if (request is { })
+        {
+            _requestsRepository.UpdateStatus(request.Id, DownloadRequestStatus.InProgress);
+            _downloadInProgress = Task.Run(() => PerformDownload(request));
+        }
+    }
 
+    private void PerformDownload(DownloadRequest request)
+    {
         var downloadSuccessful = false;
 
         try
