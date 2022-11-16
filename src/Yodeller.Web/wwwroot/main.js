@@ -19,31 +19,6 @@
   },
 };
 
-const TimezoneModule = {
-  toUtc: function (localHHMM) {
-    const pieces = localHHMM.split(":");
-    const timezoneOffset = new Date().getTimezoneOffset() / 60;
-    return `${this._wrapHour(parseInt(pieces[0]) + timezoneOffset)}:${this._pad(
-      pieces[1]
-    )}`;
-  },
-  toLocal: function (utcHHMM) {
-    const pieces = utcHHMM.split(":");
-    const timezoneOffset = new Date().getTimezoneOffset() / 60;
-    return `${this._wrapHour(parseInt(pieces[0]) - timezoneOffset)}:${this._pad(
-      pieces[1]
-    )}`;
-  },
-  _pad: function (num) {
-    return String(num).padStart(2, "0");
-  },
-  _wrapHour: function (hour) {
-    if (hour < 0) return hour + 24;
-    else if (hour >= 24) return hour - 24;
-    else return hour;
-  },
-};
-
 const EnvironmentDetailsModule = {
   initialise: function () {
     fetch("/environment", { method: "GET" })
