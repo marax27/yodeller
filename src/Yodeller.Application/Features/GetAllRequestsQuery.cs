@@ -33,7 +33,8 @@ public class GetAllRequestsQueryHandler : IRequestHandler<GetAllRequestsQuery, G
             DownloadRequestStatus.InProgress,
             DownloadRequestStatus.Failed,
             DownloadRequestStatus.New,
-            DownloadRequestStatus.Completed
+            DownloadRequestStatus.Completed,
+            DownloadRequestStatus.Cancelled
         };
 
         var requests = statuses
@@ -54,6 +55,7 @@ public class GetAllRequestsQueryHandler : IRequestHandler<GetAllRequestsQuery, G
             DownloadRequestStatus.Completed => "Completed",
             DownloadRequestStatus.Failed => "Failed",
             DownloadRequestStatus.InProgress => "In progress",
+            DownloadRequestStatus.Cancelled => "Cancelled",
             _ => throw new NotImplementedException("Unsupported request status.")
         }
     );

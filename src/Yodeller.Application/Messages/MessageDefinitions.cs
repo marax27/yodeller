@@ -14,3 +14,22 @@ public record RequestedNewDownload(DownloadRequest Request) : BaseMessage
         repository.Add(Request);
     }
 }
+
+public record RequestedDownloadCancellation(string RequestId) : BaseMessage
+{
+    public override void Invoke(IDownloadRequestsRepository repository)
+    {
+        try
+        {
+            var currentStatus = repository.FindById(RequestId).Status;
+            if (currentStatus == DownloadRequestStatus.New)
+            {
+                repository.UpdateStatus(RequestId, DownloadRequestStatus.Cancelled);
+            }
+        }
+        catch (KeyNotFoundException)
+        {
+            throw new ArgumentException($"Request ID '{RequestId}' not found in the repository.");
+        }
+    }
+}

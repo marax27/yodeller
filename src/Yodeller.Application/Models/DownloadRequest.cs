@@ -5,7 +5,8 @@ public enum DownloadRequestStatus
     New,
     InProgress,
     Completed,
-    Failed
+    Failed,
+    Cancelled
 }
 
 public record DownloadRequest(
