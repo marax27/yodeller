@@ -89,9 +89,35 @@ const EnvironmentDetailsModule = {
   },
 };
 
+const TableOverlayModule = {
+  enable: function () {
+    this._overlay().classList.add("is-loading");
+    this._startTime = new Date();
+  },
+  disable: function () {
+    const overlayDurationMs = new Date() - this._startTime;
+    const overlay = this._overlay();
+
+    if (overlayDurationMs > 250) {
+      overlay.classList.remove("is-loading");
+    } else {
+      setTimeout(
+        () => overlay.classList.remove("is-loading"),
+        250 - overlayDurationMs
+      );
+    }
+  },
+  _overlay: function () {
+    return document.querySelector("#refreshOverlay");
+  },
+  _startTime: null,
+};
+
 const RequestTableModule = {
   updateTable: function () {
     const tableBody = document.querySelector("#downloadsViewTable tbody");
+
+    TableOverlayModule.enable();
 
     fetch("/requests")
       .then((response) => response.json())
@@ -122,7 +148,8 @@ const RequestTableModule = {
       .catch((err) => {
         const title = "Failed to update the table";
         NotificationsModule.error(`${err}`, title);
-      });
+      })
+      .finally(() => TableOverlayModule.disable());
   },
   _createFallbackRow: function () {
     const message = ComponentBuilder.create("span", [], []);
