@@ -19,6 +19,49 @@
   },
 };
 
+const NotificationsModule = {
+  success: function (message, title) {
+    this._renderNew(message, "is-success", title);
+  },
+  warning: function (message, title) {
+    this._renderNew(message, "is-warning", title);
+  },
+  error: function (message, title) {
+    this._renderNew(message, "is-danger", title);
+  },
+  _renderNew: function (message, className, title) {
+    const notifElement = this._create(message, className, title);
+    const formCard = document.getElementById("formCard");
+    formCard.parentNode.insertBefore(notifElement, formCard.nextSibling);
+  },
+  _create(message, className, title) {
+    const notifTitle = ComponentBuilder.create("p", [], []);
+    notifTitle.textContent = title;
+
+    const deleteButton = ComponentBuilder.create("button", ["delete"], []);
+    deleteButton.setAttribute("aria-label", "delete");
+
+    const notifHeader = ComponentBuilder.create(
+      "div",
+      ["message-header"],
+      [notifTitle, deleteButton]
+    );
+
+    const notifBody = ComponentBuilder.create("div", ["message-body"], []);
+    notifBody.textContent = message;
+
+    const notifElement = ComponentBuilder.create(
+      "div",
+      ["message", "block", className],
+      [notifHeader, notifBody]
+    );
+
+    deleteButton.onclick = () => (notifElement.style.display = "none");
+
+    return notifElement;
+  },
+};
+
 const EnvironmentDetailsModule = {
   initialise: function () {
     fetch("/environment", { method: "GET" })
@@ -77,9 +120,8 @@ const RequestTableModule = {
         spinner.parentNode.replaceChild(newSpinner, spinner);
       })
       .catch((err) => {
-        const title = "Failed to update requests";
-        console.error(`${title}: ${err}`);
-        renderNewAlert(`${err}`, "is-danger", title);
+        const title = "Failed to update the table";
+        NotificationsModule.error(`${err}`, title);
       });
   },
   _createFallbackRow: function () {
@@ -168,11 +210,12 @@ function cancelDownload(requestId, mediaLocator) {
   const url = "/requests/" + encodeURIComponent(requestId);
   fetch(url, { method: "DELETE" })
     .then((response) => {
-      RequestTableModule.updateTable();
+      setTimeout(() => {
+        RequestTableModule.updateTable();
+      }, 300);
     })
     .catch((err) => {
-      console.error(`Failed to cancel a "${mediaLocator}" download: ${err}`);
-      console.warn(`TODO Alert: ${err}`);
+      NotificationsModule.warning(`${err}`, "Failed to send a cancel request");
     });
 }
 
@@ -218,9 +261,18 @@ function postMediaRequest(mediaType) {
     .then(() => {
       mediaLocatorFormField.value = "";
       subtitlesFormField.value = "";
+      NotificationsModule.success(
+        `Requested download: ${requestBody.mediaLocator}`,
+        "Requested a download"
+      );
       setTimeout(() => RequestTableModule.updateTable(), 300);
     })
-    .catch((err) => console.error("failed to submit a video request: " + err));
+    .catch((err) => {
+      NotificationsModule.error(
+        `Failed to request a download: ${err}`,
+        "Failed to send a request"
+      );
+    });
 
   return false;
 }
