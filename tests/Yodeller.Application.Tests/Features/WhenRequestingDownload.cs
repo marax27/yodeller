@@ -12,7 +12,7 @@ public class WhenRequestingDownload
 {
     private readonly DateTime _sampleRequestTime = new(2022, 11, 01, 15, 40, 51);
 
-    private readonly RequestDownloadCommand _sampleCommand = new("http://example-media-page.com?id=123", false);
+    private readonly RequestDownloadCommand _sampleCommand = new(Array.Empty<string>(), "http://example-media-page.com?id=123", false);
 
     private readonly Mock<IMessageProducer<BaseMessage>> _producerMock = new();
 

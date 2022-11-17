@@ -62,22 +62,27 @@
                   </div>
                 </div>
 
-                <div class="field">
-                  <div class="control">
-                    <label
-                      for="subtitles"
-                      class="radio"
-                      title="Download video + subtitles."
-                    >
-                      <input
-                        type="checkbox"
-                        name="subtitles"
-                        id="subtitles"
-                        disabled
-                        title="Not implemented."
-                      />
-                      With subtitles
-                    </label>
+                <div
+                  class="field"
+                  title="Fill in to download video + subtitles (optional)."
+                >
+                  <label
+                    for="subtitles"
+                    class="label"
+                    title="Download video + subtitles."
+                    >Subtitle patterns (optional):</label
+                  >
+                  <div class="control has-icons-left">
+                    <input
+                      type="text"
+                      name="subtitles"
+                      id="subtitles"
+                      class="input"
+                      placeholder="en.*,pl,live_chat"
+                    />
+                    <span class="icon is-left">
+                      <ion-icon name="text"></ion-icon>
+                    </span>
                   </div>
                 </div>
 
@@ -90,9 +95,6 @@
                   </span>
                   <span class="validation-message"></span>
                 </div>
-
-                <input type="hidden" name="safeHoursStart" />
-                <input type="hidden" name="safeHoursEnd" />
 
                 <div class="field">
                   <p><strong>Download:</strong></p>

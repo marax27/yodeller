@@ -200,9 +200,12 @@ function postMediaRequest(mediaType) {
 
   const mediaLocatorFormField = document.forms["requestDownloadForm"]["url"];
 
+  const subtitlesFormField = document.forms["requestDownloadForm"]["subtitles"];
+
   const requestBody = {
     mediaLocator: mediaLocatorFormField.value,
     audioOnly: mediaType === "audio",
+    subtitlePatterns: (subtitlesFormField.value || "").split(","),
   };
 
   fetch("/requests", {
@@ -214,6 +217,7 @@ function postMediaRequest(mediaType) {
   })
     .then(() => {
       mediaLocatorFormField.value = "";
+      subtitlesFormField.value = "";
       setTimeout(() => RequestTableModule.updateTable(), 300);
     })
     .catch((err) => console.error("failed to submit a video request: " + err));

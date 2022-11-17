@@ -14,5 +14,6 @@ public record DownloadRequest(
     DateTime RequestedTime,
     string MediaLocator,
     bool AudioOnly,
+    IReadOnlyCollection<string> SubtitlePatterns,
     DownloadRequestStatus Status
 );
