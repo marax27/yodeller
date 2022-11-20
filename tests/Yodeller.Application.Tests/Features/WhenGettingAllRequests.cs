@@ -42,8 +42,8 @@ public class WhenGettingAllRequests
             new GetAllRequestsQuery.Result(
                 new GetAllRequestsQuery.DownloadRequestDto[]
                 {
-                    new("id1", "aaa111", false, expectedStatus),
-                    new("id2", "http://test.test/videos?id=456", false, expectedStatus)
+                    new("id1", "aaa111", false, Array.Empty<GetAllRequestsQuery.HistoryEntryDto>(), expectedStatus),
+                    new("id2", "http://test.test/videos?id=456", false, Array.Empty<GetAllRequestsQuery.HistoryEntryDto>(), expectedStatus)
                 }
             )
         );
@@ -65,8 +65,8 @@ public class WhenGettingAllRequests
             new GetAllRequestsQuery.Result(
                 new GetAllRequestsQuery.DownloadRequestDto[]
                 {
-                    new("id1", "aaa111", false, "Completed"),
-                    new("id2", "http://test.test/videos?id=456", false, "In progress")
+                    new("id1", "aaa111", false, Array.Empty<GetAllRequestsQuery.HistoryEntryDto>(), "Completed"),
+                    new("id2", "http://test.test/videos?id=456", false, Array.Empty<GetAllRequestsQuery.HistoryEntryDto>(), "In progress")
                 }
             )
         );
@@ -78,6 +78,7 @@ public class WhenGettingAllRequests
         "aaa111",
         false,
         Array.Empty<string>(),
+        Array.Empty<HistoryEntry>(),
         status
     );
 
@@ -87,6 +88,7 @@ public class WhenGettingAllRequests
         "http://test.test/videos?id=456",
         false,
         Array.Empty<string>(),
+        Array.Empty<HistoryEntry>(),
         status
     );
 }

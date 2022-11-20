@@ -5,10 +5,16 @@ namespace Yodeller.Application.Features;
 
 public record GetAllRequestsQuery : IRequest<GetAllRequestsQuery.Result>
 {
+    public record HistoryEntryDto(
+        string Description,
+        DateTime DateTime
+    );
+
     public record DownloadRequestDto(
         string Id,
         string MediaLocator,
         bool AudioOnly,
+        IReadOnlyCollection<HistoryEntryDto> History,
         string Status
     );
 
@@ -49,6 +55,7 @@ public class GetAllRequestsQueryHandler : IRequestHandler<GetAllRequestsQuery, G
         model.Id,
         model.MediaLocator,
         model.AudioOnly,
+        MapHistory(model.History),
         model.Status switch
         {
             DownloadRequestStatus.New => "New",
@@ -59,4 +66,11 @@ public class GetAllRequestsQueryHandler : IRequestHandler<GetAllRequestsQuery, G
             _ => throw new NotImplementedException("Unsupported request status.")
         }
     );
+
+    private static IReadOnlyCollection<GetAllRequestsQuery.HistoryEntryDto> MapHistory(IEnumerable<HistoryEntry> entries)
+    {
+        return entries
+            .Select(entry => new GetAllRequestsQuery.HistoryEntryDto(entry.Description, entry.DateTime))
+            .ToArray();
+    }
 }

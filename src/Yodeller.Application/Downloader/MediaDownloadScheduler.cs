@@ -10,6 +10,7 @@ public class MediaDownloadScheduler
     private readonly IMediaDownloader _downloader;
     private readonly IMessageConsumer<BaseMessage> _messageConsumer;
     private readonly IDownloadRequestsRepository _requestsRepository;
+    private readonly IClock _clock;
     private readonly ILogger<MediaDownloadScheduler> _logger;
 
     private Task? _downloadInProgress = null;
@@ -18,11 +19,13 @@ public class MediaDownloadScheduler
         IMediaDownloader downloader,
         IMessageConsumer<BaseMessage> messageConsumer,
         IDownloadRequestsRepository requestsRepository,
+        IClock clock,
         ILogger<MediaDownloadScheduler> logger)
     {
         _downloader = downloader ?? throw new ArgumentNullException(nameof(downloader));
         _messageConsumer = messageConsumer ?? throw new ArgumentNullException(nameof(messageConsumer));
         _requestsRepository = requestsRepository ?? throw new ArgumentNullException(nameof(requestsRepository));
+        _clock = clock ?? throw new ArgumentNullException(nameof(clock));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
@@ -43,7 +46,7 @@ public class MediaDownloadScheduler
         var request = FindEligibleDownloadRequest();
         if (request is { })
         {
-            _requestsRepository.UpdateStatus(request.Id, DownloadRequestStatus.InProgress);
+            _requestsRepository.MarkDownloadInProgress(request.Id, _clock.GetNow());
             _downloadInProgress = Task.Run(() => PerformDownload(request));
         }
     }
@@ -70,10 +73,7 @@ public class MediaDownloadScheduler
         }
         finally
         {
-            var newStatus = downloadSuccessful
-                ? DownloadRequestStatus.Completed
-                : DownloadRequestStatus.Failed;
-            _requestsRepository.UpdateStatus(request.Id, newStatus);
+            _requestsRepository.MarkDownloadEnd(request.Id, downloadSuccessful, _clock.GetNow());
         }
     }
 

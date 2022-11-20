@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using Yodeller.Application.Models;
+using Yodeller.Application.Ports;
 
 namespace Yodeller.Application;
 
@@ -7,7 +8,11 @@ public interface IDownloadRequestsRepository
 {
     void Add(DownloadRequest newRequest);
 
-    void UpdateStatus(string id, DownloadRequestStatus newStatus);
+    void Cancel(string id);
+
+    void MarkDownloadInProgress(string id, DateTime downloadStartTime);
+
+    void MarkDownloadEnd(string id, bool successful, DateTime downloadEndTime);
 
     DownloadRequest FindById(string id);
 
@@ -24,10 +29,38 @@ public class DownloadRequestsRepository : IDownloadRequestsRepository
             throw new ArgumentException($"Duplicate request ID: '{newRequest.Id}'");
     }
 
-    public void UpdateStatus(string id, DownloadRequestStatus newStatus)
+    public void Cancel(string id)
     {
         var oldRequest = FindById(id);
-        _requests[id] = oldRequest with { Status = newStatus };
+        _requests[id] = oldRequest with { Status = DownloadRequestStatus.Cancelled };
+    }
+
+    public void MarkDownloadInProgress(string id, DateTime downloadStartTime)
+    {
+        var oldRequest = FindById(id);
+        var historyEntry = new HistoryEntry("Download started.", downloadStartTime);
+        _requests[id] = oldRequest with
+        {
+            Status = DownloadRequestStatus.InProgress,
+            History = oldRequest.History.Concat(new[] { historyEntry }).ToArray()
+        };
+    }
+
+    public void MarkDownloadEnd(string id, bool successful, DateTime downloadEndTime)
+    {
+        var oldRequest = FindById(id);
+        var newStatus = successful
+            ? DownloadRequestStatus.Completed
+            : DownloadRequestStatus.Failed;
+        var historyDescription = successful
+            ? "Completed."
+            : "Failed.";
+        var historyEntry = new HistoryEntry(historyDescription, downloadEndTime);
+        _requests[id] = oldRequest with
+        {
+            Status = newStatus,
+            History = oldRequest.History.Concat(new[] { historyEntry }).ToArray()
+        };
     }
 
     public DownloadRequest FindById(string id) => _requests[id];

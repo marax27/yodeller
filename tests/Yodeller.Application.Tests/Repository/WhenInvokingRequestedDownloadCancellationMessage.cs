@@ -72,6 +72,7 @@ public class WhenInvokingRequestedDownloadCancellationMessage
         $"http://video.page/{requestId}",
         false,
         Array.Empty<string>(),
+        Array.Empty<HistoryEntry>(),
         status
     );
 }
