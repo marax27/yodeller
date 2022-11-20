@@ -202,11 +202,11 @@ const RequestTableModule = {
     if (history != null && history.length > 0) {
       const entries = history.map(
         (entry) =>
-          `[${new Date(entry.utc_time).toLocaleString()}] ${entry.description}`
+          `[${new Date(entry.dateTime).toLocaleString()}] ${entry.description}`
       );
       const button = ComponentBuilder.create(
         "button",
-        [...commonClasses, "is-black"],
+        [...commonClasses, "is-black", "has-help-text"],
         [ComponentBuilder.createIcon("information-circle-outline", true)]
       );
       button.title = entries.join("\n");

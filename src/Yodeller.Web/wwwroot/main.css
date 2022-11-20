@@ -136,9 +136,9 @@ nav.app-navbar > * + * {
 }
 
 #refreshOverlay:not(.is-loading) {
-  opacity: 0;
+  display: none;
 }
 
 #refreshOverlay:not(.is-loading) > .icon {
-  opacity: 0;
+  display: none;
 }

@@ -32,14 +32,20 @@ public class RequestDownloadCommandHandler : IRequestHandler<RequestDownloadComm
         return Task.FromResult(Unit.Value);
     }
 
-    private DownloadRequest MapToModel(RequestDownloadCommand command) => new(
-        CreateRequestId(),
-        _clock.GetNow(),
-        command.MediaLocator,
-        command.AudioOnly,
-        command.SubtitlePatterns,
-        DownloadRequestStatus.New
-    );
+    private DownloadRequest MapToModel(RequestDownloadCommand command)
+    {
+        var timeNow = _clock.GetNow();
+        var historyEntry = new HistoryEntry("Requested.", timeNow);
+        return new(
+            CreateRequestId(),
+            timeNow,
+            command.MediaLocator,
+            command.AudioOnly,
+            command.SubtitlePatterns,
+            new[] { historyEntry },
+            DownloadRequestStatus.New
+        );
+    }
 
     private static string CreateRequestId() => Guid.NewGuid().ToString();
 }

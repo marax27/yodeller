@@ -11,6 +11,7 @@ public class WhenInvokingRequestedNewDownloadMessage
         "http://test-media-page.test?id=1234",
         true,
         Array.Empty<string>(),
+        Array.Empty<HistoryEntry>(),
         DownloadRequestStatus.New
     );
 

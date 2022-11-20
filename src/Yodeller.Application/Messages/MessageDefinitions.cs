@@ -24,7 +24,7 @@ public record RequestedDownloadCancellation(string RequestId) : BaseMessage
             var currentStatus = repository.FindById(RequestId).Status;
             if (currentStatus == DownloadRequestStatus.New)
             {
-                repository.UpdateStatus(RequestId, DownloadRequestStatus.Cancelled);
+                repository.Cancel(RequestId);
             }
         }
         catch (KeyNotFoundException)
