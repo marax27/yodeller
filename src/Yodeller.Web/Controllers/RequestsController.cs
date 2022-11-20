@@ -59,4 +59,15 @@ public class RequestsController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpPost]
+    [Route("clear-finished")]
+    public async Task<IActionResult> PostClearFinished()
+    {
+        var command = new ClearFinishedCommand();
+
+        await _mediator.Send(command);
+
+        return NoContent();
+    }
 }

@@ -304,6 +304,19 @@ function postMediaRequest(mediaType) {
   return false;
 }
 
+function clearFinishedRequests() {
+  fetch("/requests/clear-finished", { method: "POST" })
+    .then(() => {
+      setTimeout(() => RequestTableModule.updateTable(), 300);
+    })
+    .catch((err) => {
+      NotificationsModule.error(
+        `Failed to clear finished requests: ${err}`,
+        "Failed to send a request"
+      );
+    });
+}
+
 function main() {
   EnvironmentDetailsModule.initialise();
 

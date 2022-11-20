@@ -33,3 +33,23 @@ public record RequestedDownloadCancellation(string RequestId) : BaseMessage
         }
     }
 }
+
+public record ClearFinishedRequests : BaseMessage
+{
+    public override void Invoke(IDownloadRequestsRepository repository)
+    {
+        var statusesToRemove = new[]
+        {
+            DownloadRequestStatus.Cancelled,
+            DownloadRequestStatus.Completed,
+            DownloadRequestStatus.Failed,
+        };
+
+        var idsToRemove = statusesToRemove
+            .SelectMany(repository.FindByStatus)
+            .Select(request => request.Id)
+            .ToArray();
+
+        repository.DeleteMany(idsToRemove);
+    }
+}
