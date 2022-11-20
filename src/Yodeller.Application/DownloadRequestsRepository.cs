@@ -17,6 +17,8 @@ public interface IDownloadRequestsRepository
     DownloadRequest FindById(string id);
 
     IEnumerable<DownloadRequest> FindByStatus(DownloadRequestStatus status);
+
+    void DeleteMany(IReadOnlyCollection<string> ids);
 }
 
 public class DownloadRequestsRepository : IDownloadRequestsRepository
@@ -68,4 +70,12 @@ public class DownloadRequestsRepository : IDownloadRequestsRepository
     public IEnumerable<DownloadRequest> FindByStatus(DownloadRequestStatus status) => _requests
         .Where(kvp => kvp.Value.Status == status)
         .Select(kvp => kvp.Value);
+
+    public void DeleteMany(IReadOnlyCollection<string> ids)
+    {
+        foreach (var idToRemove in ids)
+        {
+            _requests.Remove(idToRemove, out _);
+        }
+    }
 }
