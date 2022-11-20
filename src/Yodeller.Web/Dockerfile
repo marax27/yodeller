@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
 EXPOSE 80
 
@@ -15,7 +15,7 @@ RUN chmod a+rx /usr/local/bin/yt-dlp
 # Uninstall curl which was only used to install yt-dlp
 RUN apt remove -y curl
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["src/Yodeller.Web/Yodeller.Web.csproj", "src/Yodeller.Web/"]
 RUN dotnet restore "src/Yodeller.Web/Yodeller.Web.csproj"
