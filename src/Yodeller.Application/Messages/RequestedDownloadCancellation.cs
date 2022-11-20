@@ -1,6 +1,4 @@
-﻿using Yodeller.Application.Models;
-
-namespace Yodeller.Application.Messages;
+﻿namespace Yodeller.Application.Messages;
 
 public record RequestedDownloadCancellation(string RequestId) : BaseMessage
 {
@@ -8,11 +6,7 @@ public record RequestedDownloadCancellation(string RequestId) : BaseMessage
     {
         try
         {
-            var currentStatus = repository.FindById(RequestId).Status;
-            if (currentStatus == DownloadRequestStatus.New)
-            {
-                repository.Cancel(RequestId);
-            }
+            repository.TryCancel(RequestId);
         }
         catch (KeyNotFoundException)
         {

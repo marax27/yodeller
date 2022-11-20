@@ -1,6 +1,5 @@
 ﻿using System.Collections.Concurrent;
 using Yodeller.Application.Models;
-using Yodeller.Application.Ports;
 
 namespace Yodeller.Application;
 
@@ -8,7 +7,7 @@ public interface IDownloadRequestsRepository
 {
     void Add(DownloadRequest newRequest);
 
-    void Cancel(string id);
+    void TryCancel(string id);
 
     void MarkDownloadInProgress(string id, DateTime downloadStartTime);
 
@@ -31,10 +30,14 @@ public class DownloadRequestsRepository : IDownloadRequestsRepository
             throw new ArgumentException($"Duplicate request ID: '{newRequest.Id}'");
     }
 
-    public void Cancel(string id)
+    public void TryCancel(string id)
     {
-        var oldRequest = FindById(id);
-        _requests[id] = oldRequest with { Status = DownloadRequestStatus.Cancelled };
+        var oldRequest = _requests[id];
+        if (oldRequest.Status == DownloadRequestStatus.New)
+        {
+            var newRequest = oldRequest with { Status = DownloadRequestStatus.Cancelled };
+            _requests.TryUpdate(id, newRequest, oldRequest);
+        }
     }
 
     public void MarkDownloadInProgress(string id, DateTime downloadStartTime)
