@@ -14,6 +14,8 @@ Docker Hub: https://hub.docker.com/r/marax27/yodeller
 
 Run Yodeller instance using an image published on Docker Hub (please replace the `c:/where-to-store-downloaded-files` with a path on your machine):
 
+    docker pull marax27/yodeller
+
     docker run -d -p 50500:80 -v c:/where-to-store-downloaded-files:/out marax27/yodeller
 
 ### Building the image yourself
