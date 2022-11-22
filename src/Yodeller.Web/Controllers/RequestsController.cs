@@ -42,7 +42,8 @@ public class RequestsController : ControllerBase
         var command = new RequestDownloadCommand(
             request.SubtitlePatterns ?? Array.Empty<string>(),
             request.MediaLocator,
-            request.AudioOnly);
+            request.AudioOnly ?? throw new ArgumentNullException(nameof(request.AudioOnly))
+        );
 
         await _mediator.Send(command);
 

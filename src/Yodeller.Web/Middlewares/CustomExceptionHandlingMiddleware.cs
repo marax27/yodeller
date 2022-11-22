@@ -19,7 +19,7 @@ public class CustomExceptionHandlingMiddleware
         }
         catch (ArgumentException exc)
         {
-            await ProcessException(httpContext, exc.Message, HttpStatusCode.UnprocessableEntity);
+            await ProcessException(httpContext, exc.Message, HttpStatusCode.BadRequest);
         }
         catch (NotImplementedException exc)
         {
