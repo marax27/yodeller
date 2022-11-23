@@ -1,16 +1,24 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Core.Shared.StateManagement;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Yodeller.Application.Downloader;
-using Yodeller.Application.Messages;
 using Yodeller.Application.Ports;
+using Yodeller.Application.State;
 
 namespace Yodeller.Web.Tests.Helpers;
 
 public class TestApplicationWithMockedQueue : WebApplicationFactory<Program>
 {
-    public Mock<IMessageProducer<BaseMessage>> MockRequestProducer { get; } = new();
+    public Mock<IMessageProducer<IStateReducer<DownloadRequestsState>>> MockRequestProducer { get; } = new();
 
     public Mock<IMediaDownloader> MockMediaDownloader { get; } = new();
+
+    public TestApplicationWithMockedQueue()
+    {
+        MockRequestProducer
+            .Setup(producer => producer.Produce(It.IsAny<IStateReducer<DownloadRequestsState>>()))
+            .Callback(OnReducerProduced);
+    }
 
     protected override IHost CreateHost(IHostBuilder builder)
     {
@@ -27,5 +35,11 @@ public class TestApplicationWithMockedQueue : WebApplicationFactory<Program>
             .Setup(mock => mock.Download(It.IsAny<DownloadProcessSpecification>()))
             .Returns(true);
         services.AddSingleton(MockMediaDownloader.Object);
+    }
+
+    private static void OnReducerProduced(IStateReducer<DownloadRequestsState> reducer)
+    {
+        var dumbState = new DownloadRequestsState(new());
+        reducer.Invoke(dumbState);
     }
 }

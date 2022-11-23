@@ -1,8 +1,9 @@
+using Core.Shared.StateManagement;
 using MediatR;
 using Yodeller.Application;
 using Yodeller.Application.Downloader;
-using Yodeller.Application.Messages;
 using Yodeller.Application.Ports;
+using Yodeller.Application.State;
 using Yodeller.Infrastructure.Adapters;
 using Yodeller.Web;
 using Yodeller.Web.Middlewares;
@@ -21,13 +22,23 @@ builder.Services.AddTransient<IMediaDownloader, YtDlpMediaDownloader>();
 builder.Services.AddTransient<IDiskSpaceEnvironmentCheck, DiskSpaceEnvironmentCheck>();
 builder.Services.AddTransient<IApplicationAvailableEnvironmentCheck, ApplicationAvailableEnvironmentCheck>();
 
-var messageQueue = new InMemoryMessageQueue();
+var messageQueue = new InMemoryReducerQueue();
 
-builder.Services.AddSingleton<IMessageProducer<BaseMessage>>(messageQueue);
-builder.Services.AddSingleton<IMessageConsumer<BaseMessage>>(messageQueue);
-builder.Services.AddSingleton<IDownloadRequestsRepository>(new DownloadRequestsRepository());
+builder.Services.AddSingleton<IMessageProducer<IStateReducer<DownloadRequestsState>>>(messageQueue);
+builder.Services.AddSingleton<IMessageConsumer<IStateReducer<DownloadRequestsState>>>(messageQueue);
 
 builder.Services.AddHostedService<BackgroundDownloaderService>();
+builder.Services.AddHostedService<BackgroundStateManagementService>(s =>
+{
+    var initialState = new DownloadRequestsState(new());
+    return new(
+        new DownloadRequestsStateManager(
+            initialState,
+            s.GetRequiredService<IMessageConsumer<IStateReducer<DownloadRequestsState>>>()
+        ),
+        s.GetRequiredService<ILogger<BackgroundStateManagementService>>()
+    );
+});
 
 var app = builder.Build();
 

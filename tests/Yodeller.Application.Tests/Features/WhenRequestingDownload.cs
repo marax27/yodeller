@@ -1,9 +1,8 @@
-﻿using FluentAssertions;
-using Moq;
-using Yodeller.Application.Features;
-using Yodeller.Application.Messages;
+﻿using Core.Shared.StateManagement;
+using Yodeller.Application.Features.RequestDownload;
 using Yodeller.Application.Models;
 using Yodeller.Application.Ports;
+using Yodeller.Application.State;
 using Yodeller.Application.Tests.Helpers;
 
 namespace Yodeller.Application.Tests.Features;
@@ -14,7 +13,7 @@ public class WhenRequestingDownload
 
     private readonly RequestDownloadCommand _sampleCommand = new(Array.Empty<string>(), "http://example-media-page.com?id=123", false);
 
-    private readonly Mock<IMessageProducer<BaseMessage>> _producerMock = new();
+    private readonly Mock<IMessageProducer<IStateReducer<DownloadRequestsState>>> _producerMock = new();
 
     private readonly StubClock _stubClock;
 
@@ -37,19 +36,19 @@ public class WhenRequestingDownload
     }
 
     [Fact]
-    public async Task GivenValidCommandThenProducerReceivedExactlyOneRequest()
+    public async Task GivenValidCommandThenProduceExactlyOneReducer()
     {
         var sut = new RequestDownloadCommandHandler(_producerMock.Object, _stubClock);
 
         await sut.Handle(_sampleCommand, CancellationToken.None);
 
-        _producerMock.Verify(mock => mock.Produce(It.IsAny<BaseMessage>()), Times.Once);
+        _producerMock.Verify(mock => mock.Produce(It.IsAny<IStateReducer<DownloadRequestsState>>()), Times.Once);
     }
 
     [Fact]
-    public async Task GivenValidCommandThenProducerReceivedExpectedRequest()
+    public async Task GivenValidCommandThenProduceExpectedReducer()
     {
-        var stubProducer = new StubMessageProducer();
+        var stubProducer = new StubReducerProducer();
         var sut = new RequestDownloadCommandHandler(stubProducer, _stubClock);
 
         await sut.Handle(_sampleCommand, CancellationToken.None);

@@ -13,9 +13,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yodeller.Application.Tests"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yodeller.Application", "src\Yodeller.Application\Yodeller.Application.csproj", "{57278C33-2986-43C8-8C8B-969AA8C4E4D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yodeller.Web.Tests", "tests\Yodeller.Web.Tests\Yodeller.Web.Tests.csproj", "{D1E7D1B9-DEF8-492F-8328-890A869B40C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yodeller.Web.Tests", "tests\Yodeller.Web.Tests\Yodeller.Web.Tests.csproj", "{D1E7D1B9-DEF8-492F-8328-890A869B40C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yodeller.Infrastructure", "src\Yodeller.Infrastructure\Yodeller.Infrastructure.csproj", "{43461B3A-C338-4E06-ADBB-343CC00B8A25}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yodeller.Infrastructure", "src\Yodeller.Infrastructure\Yodeller.Infrastructure.csproj", "{43461B3A-C338-4E06-ADBB-343CC00B8A25}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Shared", "src\Core.Shared\Core.Shared.csproj", "{C3166C7A-7B9D-4D8E-A48E-377FC5EC68A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Shared.Tests", "tests\Core.Shared.Tests\Core.Shared.Tests.csproj", "{76425E15-2AEE-4AB8-B949-63FDA1D65AB9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +47,14 @@ Global
 		{43461B3A-C338-4E06-ADBB-343CC00B8A25}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43461B3A-C338-4E06-ADBB-343CC00B8A25}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43461B3A-C338-4E06-ADBB-343CC00B8A25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3166C7A-7B9D-4D8E-A48E-377FC5EC68A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3166C7A-7B9D-4D8E-A48E-377FC5EC68A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3166C7A-7B9D-4D8E-A48E-377FC5EC68A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3166C7A-7B9D-4D8E-A48E-377FC5EC68A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76425E15-2AEE-4AB8-B949-63FDA1D65AB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76425E15-2AEE-4AB8-B949-63FDA1D65AB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76425E15-2AEE-4AB8-B949-63FDA1D65AB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76425E15-2AEE-4AB8-B949-63FDA1D65AB9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -53,6 +65,8 @@ Global
 		{57278C33-2986-43C8-8C8B-969AA8C4E4D4} = {E9BC450F-79D5-418B-ADC9-892BF740F61D}
 		{D1E7D1B9-DEF8-492F-8328-890A869B40C0} = {E58129AF-79D0-4FC1-824D-DFAA7DBA9670}
 		{43461B3A-C338-4E06-ADBB-343CC00B8A25} = {E9BC450F-79D5-418B-ADC9-892BF740F61D}
+		{C3166C7A-7B9D-4D8E-A48E-377FC5EC68A8} = {E9BC450F-79D5-418B-ADC9-892BF740F61D}
+		{76425E15-2AEE-4AB8-B949-63FDA1D65AB9} = {E58129AF-79D0-4FC1-824D-DFAA7DBA9670}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A5FC429F-4FC5-4361-8568-057C17705363}

@@ -1,7 +1,8 @@
-﻿using Yodeller.Application.Features;
-using Yodeller.Application.Messages;
+﻿using Core.Shared.StateManagement;
+using Yodeller.Application.Features.RequestDownload;
 using Yodeller.Application.Models;
 using Yodeller.Application.Ports;
+using Yodeller.Application.State;
 using Yodeller.Application.Tests.Helpers;
 
 namespace Yodeller.Application.Tests.Features;
@@ -14,7 +15,7 @@ public class WhenRequesting2Downloads
     private readonly DateTime _firstRequestTime = new(2022, 11, 15, 23, 59, 57);
     private readonly DateTime _otherRequestTime = new(2022, 11, 16, 0, 0, 1);
 
-    private readonly Mock<IMessageProducer<BaseMessage>> _producerMock = new();
+    private readonly Mock<IMessageProducer<IStateReducer<DownloadRequestsState>>> _producerMock = new();
 
     private readonly StubClock _stubClock;
 
@@ -24,20 +25,20 @@ public class WhenRequesting2Downloads
     }
 
     [Fact]
-    public async Task Given2ValidCommandsThenProducerReceivedExactly2Requests()
+    public async Task Given2ValidCommandsThenProduceExactly2Reducers()
     {
         var sut = new RequestDownloadCommandHandler(_producerMock.Object, _stubClock);
 
         await sut.Handle(_firstCommand, CancellationToken.None);
         await sut.Handle(_otherCommand, CancellationToken.None);
 
-        _producerMock.Verify(mock => mock.Produce(It.IsAny<BaseMessage>()), Times.Exactly(2));
+        _producerMock.Verify(mock => mock.Produce(It.IsAny<IStateReducer<DownloadRequestsState>>()), Times.Exactly(2));
     }
 
     [Fact]
-    public async Task Given2ValidCommandsThenProducerReceivedExpectedValues()
+    public async Task Given2ValidCommandsThenProduceExpectedValues()
     {
-        var stubProducer = new StubMessageProducer();
+        var stubProducer = new StubReducerProducer();
         var sut = new RequestDownloadCommandHandler(stubProducer, _stubClock);
 
         await sut.Handle(_firstCommand, CancellationToken.None);
@@ -57,9 +58,9 @@ public class WhenRequesting2Downloads
     }
 
     [Fact]
-    public async Task Given2ValidCommandsThenRequestsShouldHaveDifferentIds()
+    public async Task Given2ValidCommandsThenReducersShouldHaveDifferentIds()
     {
-        var stubProducer = new StubMessageProducer();
+        var stubProducer = new StubReducerProducer();
         var sut = new RequestDownloadCommandHandler(stubProducer, _stubClock);
 
         await sut.Handle(_firstCommand, CancellationToken.None);

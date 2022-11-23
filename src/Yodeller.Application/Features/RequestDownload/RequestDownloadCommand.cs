@@ -1,9 +1,10 @@
-﻿using MediatR;
-using Yodeller.Application.Messages;
+﻿using Core.Shared.StateManagement;
+using MediatR;
 using Yodeller.Application.Models;
 using Yodeller.Application.Ports;
+using Yodeller.Application.State;
 
-namespace Yodeller.Application.Features;
+namespace Yodeller.Application.Features.RequestDownload;
 
 public record RequestDownloadCommand(
     IReadOnlyCollection<string> SubtitlePatterns,
@@ -11,23 +12,22 @@ public record RequestDownloadCommand(
     bool AudioOnly
 ) : IRequest;
 
-
 public class RequestDownloadCommandHandler : IRequestHandler<RequestDownloadCommand>
 {
-    private readonly IMessageProducer<BaseMessage> _messageProducer;
+    private readonly IMessageProducer<IStateReducer<DownloadRequestsState>> _messageProducer;
     private readonly IClock _clock;
 
-    public RequestDownloadCommandHandler(IMessageProducer<BaseMessage> messageProducer, IClock clock)
+    public RequestDownloadCommandHandler(IMessageProducer<IStateReducer<DownloadRequestsState>> messageProducer, IClock clock)
     {
         _messageProducer = messageProducer ?? throw new ArgumentNullException(nameof(messageProducer));
         _clock = clock ?? throw new ArgumentNullException(nameof(clock));
     }
 
-    public Task<Unit> Handle(RequestDownloadCommand command, CancellationToken cancellationToken)
+    public Task<Unit> Handle(RequestDownloadCommand request, CancellationToken cancellationToken)
     {
-        var model = MapToModel(command);
+        var newRequest = MapToModel(request);
 
-        _messageProducer.Produce(new RequestedNewDownload(model));
+        _messageProducer.Produce(new AddNewRequestReducer(newRequest));
 
         return Task.FromResult(Unit.Value);
     }

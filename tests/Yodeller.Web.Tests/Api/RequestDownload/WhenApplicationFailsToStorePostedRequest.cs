@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
-using Yodeller.Application.Messages;
-using Yodeller.Web.Features;
+using Yodeller.Application.Features.RequestDownload;
+using Yodeller.Web.Data;
 using Yodeller.Web.Tests.Helpers;
 
 namespace Yodeller.Web.Tests.Api.RequestDownload;
@@ -13,7 +13,8 @@ public class WhenApplicationFailsToStorePostedRequest : IClassFixture<TestApplic
     public WhenApplicationFailsToStorePostedRequest(TestApplicationWithMockedQueue application)
     {
         _application = application;
-        _application.MockRequestProducer.Setup(mock => mock.Produce(It.IsAny<BaseMessage>()))
+        _application.MockRequestProducer
+            .Setup(mock => mock.Produce(It.IsAny<AddNewRequestReducer>()))
             .Throws(new InvalidOperationException("Internal producer failure"));
     }
 

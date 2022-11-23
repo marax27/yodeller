@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
-using Yodeller.Application.Messages;
-using Yodeller.Web.Features;
+using Yodeller.Application.Features.RequestDownload;
+using Yodeller.Web.Data;
 using Yodeller.Web.Tests.Helpers;
 
 namespace Yodeller.Web.Tests.Api.RequestDownload;
@@ -33,8 +33,8 @@ public class WhenPostingRequest : IClassFixture<TestApplicationWithMockedQueue>
         var response = await PostRequest(givenMediaLocator);
 
         _application.MockRequestProducer
-            .Verify(mock => mock.Produce(It.Is<RequestedNewDownload>(
-                message => message.Request.MediaLocator == givenMediaLocator)), Times.Once);
+            .Verify(mock => mock.Produce(It.Is<AddNewRequestReducer>(
+                message => message.NewRequest.MediaLocator == givenMediaLocator)), Times.Once);
     }
 
     private async Task<HttpResponseMessage> PostRequest(string givenMediaLocator)
