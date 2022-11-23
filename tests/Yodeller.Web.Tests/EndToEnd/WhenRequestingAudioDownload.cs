@@ -1,6 +1,6 @@
 ﻿using FluentAssertions.Execution;
 using System.Net.Http.Json;
-using Yodeller.Web.Features;
+using Yodeller.Web.Data;
 using Yodeller.Web.Tests.Helpers;
 
 namespace Yodeller.Web.Tests.EndToEnd;

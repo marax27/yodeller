@@ -1,7 +1,5 @@
 ﻿using System.Net;
-using System.Net.Http.Json;
-using Yodeller.Application.Messages;
-using Yodeller.Web.Features;
+using Yodeller.Application.Features.CancelRequest;
 using Yodeller.Web.Tests.Helpers;
 
 namespace Yodeller.Web.Tests.Api.CancelRequest;
@@ -26,12 +24,12 @@ public class WhenCancellingRequest : IClassFixture<TestApplicationWithMockedQueu
     [Fact]
     public async Task GivenValidRequestThenQueueExpectedMessage()
     {
-        var expectedMessage = new RequestedDownloadCancellation("qwerty-123456");
+        var expectedReducer = new CancelRequestReducer("qwerty-123456");
 
         await PostRequest("qwerty-123456");
 
         _application.MockRequestProducer
-            .Verify(mock => mock.Produce(expectedMessage), Times.Once);
+            .Verify(mock => mock.Produce(expectedReducer), Times.Once);
     }
 
     private async Task<HttpResponseMessage> PostRequest(string givenRequestId)

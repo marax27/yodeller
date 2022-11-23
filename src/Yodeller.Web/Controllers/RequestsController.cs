@@ -1,7 +1,10 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Yodeller.Application.Features;
-using Yodeller.Web.Features;
+using Yodeller.Application.Features.CancelRequest;
+using Yodeller.Application.Features.ClearFinished;
+using Yodeller.Application.Features.GetAllRequests;
+using Yodeller.Application.Features.RequestDownload;
+using Yodeller.Web.Data;
 
 namespace Yodeller.Web.Controllers;
 
@@ -21,7 +24,9 @@ public class RequestsController : ControllerBase
     [HttpGet]
     public async Task<IReadOnlyCollection<GetAllRequestsQuery.DownloadRequestDto>> Get()
     {
-        var result = await _mediator.Send(new GetAllRequestsQuery());
+        var query = new GetAllRequestsQuery();
+
+        var result = await _mediator.Send(query);
 
         return result.Requests;
     }
@@ -54,7 +59,7 @@ public class RequestsController : ControllerBase
     [Route("{requestId}")]
     public async Task<IActionResult> Cancel([FromRoute] string requestId)
     {
-        var command = new CancelDownloadCommand(requestId);
+        var command = new CancelRequestCommand(requestId);
 
         await _mediator.Send(command);
 

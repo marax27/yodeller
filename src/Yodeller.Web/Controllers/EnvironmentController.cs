@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Yodeller.Application.Features;
-using Yodeller.Web.Features;
+using Yodeller.Web.Data;
 
 namespace Yodeller.Web.Controllers;
 
@@ -21,7 +21,9 @@ public class EnvironmentController : ControllerBase
     [HttpGet]
     public async Task<EnvironmentChecksQuery.Result> Get()
     {
-        var result = await _mediator.Send(new EnvironmentChecksQuery());
+        var query = new EnvironmentChecksQuery();
+
+        var result = await _mediator.Send(query);
 
         return result;
     }

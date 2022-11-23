@@ -1,15 +1,16 @@
-﻿using Microsoft.Extensions.Logging;
-using Yodeller.Application.Messages;
+﻿using Core.Shared.StateManagement;
+using Microsoft.Extensions.Logging;
+using Yodeller.Application.Downloader.Reducers;
 using Yodeller.Application.Models;
 using Yodeller.Application.Ports;
+using Yodeller.Application.State;
 
 namespace Yodeller.Application.Downloader;
 
 public class MediaDownloadScheduler
 {
     private readonly IMediaDownloader _downloader;
-    private readonly IMessageConsumer<BaseMessage> _messageConsumer;
-    private readonly IDownloadRequestsRepository _requestsRepository;
+    private readonly IMessageProducer<IStateReducer<DownloadRequestsState>> _messageProducer;
     private readonly IClock _clock;
     private readonly ILogger<MediaDownloadScheduler> _logger;
 
@@ -17,36 +18,34 @@ public class MediaDownloadScheduler
 
     public MediaDownloadScheduler(
         IMediaDownloader downloader,
-        IMessageConsumer<BaseMessage> messageConsumer,
-        IDownloadRequestsRepository requestsRepository,
+        IMessageProducer<IStateReducer<DownloadRequestsState>> messageProducer,
         IClock clock,
         ILogger<MediaDownloadScheduler> logger)
     {
         _downloader = downloader ?? throw new ArgumentNullException(nameof(downloader));
-        _messageConsumer = messageConsumer ?? throw new ArgumentNullException(nameof(messageConsumer));
-        _requestsRepository = requestsRepository ?? throw new ArgumentNullException(nameof(requestsRepository));
+        _messageProducer = messageProducer ?? throw new ArgumentNullException(nameof(messageProducer));
         _clock = clock ?? throw new ArgumentNullException(nameof(clock));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public void Execute()
+    public async Task Execute()
     {
-        ConsumeAllMessages();
-
         if (_downloadInProgress is null or { IsCompleted: true })
         {
-            RunNewDownloadTask();
+            await RunNewDownloadTask();
         }
     }
 
-    private void RunNewDownloadTask()
+    private async Task RunNewDownloadTask()
     {
         _downloadInProgress?.Dispose();
 
-        var request = FindEligibleDownloadRequest();
+        var tcs = new TaskCompletionSource<DownloadRequest?>();
+        _messageProducer.Produce(new LockRequestForDownloadReducer(tcs.SetResult));
+        var request = await tcs.Task;
+
         if (request is { })
         {
-            _requestsRepository.MarkDownloadInProgress(request.Id, _clock.GetNow());
             _downloadInProgress = Task.Run(() => PerformDownload(request));
         }
     }
@@ -73,31 +72,7 @@ public class MediaDownloadScheduler
         }
         finally
         {
-            _requestsRepository.MarkDownloadEnd(request.Id, downloadSuccessful, _clock.GetNow());
-        }
-    }
-
-    private DownloadRequest? FindEligibleDownloadRequest()
-    {
-        return _requestsRepository
-            .FindByStatus(DownloadRequestStatus.New)
-            .FirstOrDefault();
-    }
-
-    private void ConsumeAllMessages()
-    {
-        var processedMessageCount = 0;
-
-        while (_messageConsumer.TryConsume(out var message))
-        {
-            _logger.LogInformation("Evaluating a message: {MessageType}...", message.GetType().Name);
-            message.Invoke(_requestsRepository);
-            ++processedMessageCount;
-        }
-
-        if (processedMessageCount > 0)
-        {
-            _logger.LogInformation("Evaluated {MessageCount} message(s).", processedMessageCount);
+            _messageProducer.Produce(new FinishDownloadReducer(request.Id, downloadSuccessful, _clock.GetNow()));
         }
     }
 }

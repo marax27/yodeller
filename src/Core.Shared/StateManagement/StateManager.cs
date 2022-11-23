@@ -18,7 +18,7 @@ public class StateManager<TState> : IStateManager<TState>
         _reducerQueue.Enqueue(reducer);
     }
 
-    public void Update()
+    public virtual void Update()
     {
         while (_reducerQueue.TryDequeue(out var reducer))
         {

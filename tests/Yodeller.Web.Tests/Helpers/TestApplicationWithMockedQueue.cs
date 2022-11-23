@@ -1,14 +1,15 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Core.Shared.StateManagement;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Yodeller.Application.Downloader;
-using Yodeller.Application.Messages;
 using Yodeller.Application.Ports;
+using Yodeller.Application.State;
 
 namespace Yodeller.Web.Tests.Helpers;
 
 public class TestApplicationWithMockedQueue : WebApplicationFactory<Program>
 {
-    public Mock<IMessageProducer<BaseMessage>> MockRequestProducer { get; } = new();
+    public Mock<IMessageProducer<IStateReducer<DownloadRequestsState>>> MockRequestProducer { get; } = new();
 
     public Mock<IMediaDownloader> MockMediaDownloader { get; } = new();
 

@@ -1,4 +1,4 @@
-﻿namespace Yodeller.Web.Features;
+﻿namespace Yodeller.Web.Data;
 
 public record NewRequestDto(
     IReadOnlyCollection<string>? SubtitlePatterns,

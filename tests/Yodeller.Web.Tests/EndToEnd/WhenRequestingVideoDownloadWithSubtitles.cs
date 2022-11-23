@@ -1,8 +1,8 @@
 ﻿using System.Net.Http.Json;
 using FluentAssertions.Execution;
 using Newtonsoft.Json;
-using Yodeller.Application.Features;
-using Yodeller.Web.Features;
+using Yodeller.Application.Features.GetAllRequests;
+using Yodeller.Web.Data;
 using Yodeller.Web.Tests.Helpers;
 namespace Yodeller.Web.Tests.EndToEnd;
 
