@@ -15,7 +15,7 @@ public class DownloadRequestsStateManager : StateManager<DownloadRequestsState>
 
     public override void Update()
     {
-        while (!_messageConsumer.TryConsume(out var reducer))
+        while (_messageConsumer.TryConsume(out var reducer))
             Dispatch(reducer);
 
         base.Update();
