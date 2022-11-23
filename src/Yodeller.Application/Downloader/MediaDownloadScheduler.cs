@@ -7,7 +7,7 @@ using Yodeller.Application.State;
 
 namespace Yodeller.Application.Downloader;
 
-public class MediaDownloadScheduler
+public class MediaDownloadScheduler : IDisposable
 {
     private readonly IMediaDownloader _downloader;
     private readonly IMessageProducer<IStateReducer<DownloadRequestsState>> _messageProducer;
@@ -28,15 +28,15 @@ public class MediaDownloadScheduler
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public async Task Execute()
+    public async Task Execute(CancellationToken stoppingToken)
     {
         if (_downloadInProgress is null or { IsCompleted: true })
         {
-            await RunNewDownloadTask();
+            await RunNewDownloadTask(stoppingToken);
         }
     }
 
-    private async Task RunNewDownloadTask()
+    private async Task RunNewDownloadTask(CancellationToken stoppingToken)
     {
         _downloadInProgress?.Dispose();
 
@@ -46,7 +46,7 @@ public class MediaDownloadScheduler
 
         if (request is { })
         {
-            _downloadInProgress = Task.Run(() => PerformDownload(request));
+            _downloadInProgress = Task.Run(() => PerformDownload(request), stoppingToken);
         }
     }
 
@@ -74,5 +74,10 @@ public class MediaDownloadScheduler
         {
             _messageProducer.Produce(new FinishDownloadReducer(request.Id, downloadSuccessful, _clock.GetNow()));
         }
+    }
+
+    public void Dispose()
+    {
+        _downloadInProgress?.Dispose();
     }
 }

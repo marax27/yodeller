@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using Core.Shared.StateManagement;
+using Yodeller.Application.Features.RequestDownload;
 using Yodeller.Application.State;
 using Yodeller.Web.Tests.Helpers;
 
@@ -13,7 +14,7 @@ public class WhenApplicationFailsToStoreRequestSentByGetMethod : IClassFixture<T
     {
         _application = application;
         _application.MockRequestProducer
-            .Setup(mock => mock.Produce(It.IsAny<IStateReducer<DownloadRequestsState>>()))
+            .Setup(mock => mock.Produce(It.IsAny<AddNewRequestReducer>()))
             .Throws(new InvalidOperationException("Internal producer failure"));
     }
 

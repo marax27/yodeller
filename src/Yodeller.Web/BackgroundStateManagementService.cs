@@ -10,10 +10,9 @@ public class BackgroundStateManagementService : BackgroundService
     private readonly IStateManager<DownloadRequestsState> _stateManager;
     private readonly ILogger<BackgroundStateManagementService> _logger;
 
-    public BackgroundStateManagementService(IMessageConsumer<IStateReducer<DownloadRequestsState>> messageConsumer, ILogger<BackgroundStateManagementService> logger)
+    public BackgroundStateManagementService(IStateManager<DownloadRequestsState> stateManager, ILogger<BackgroundStateManagementService> logger)
     {
-        var initialState = new DownloadRequestsState(new());
-        _stateManager = new DownloadRequestsStateManager(initialState, messageConsumer);
+        _stateManager = stateManager;
         _logger = logger;
     }
 
@@ -25,7 +24,7 @@ public class BackgroundStateManagementService : BackgroundService
             while (!stoppingToken.IsCancellationRequested)
             {
                 _stateManager.Update();
-                await Task.Delay(97, stoppingToken);
+                await Task.Delay(57, stoppingToken);
             }
         }
         catch (Exception e)

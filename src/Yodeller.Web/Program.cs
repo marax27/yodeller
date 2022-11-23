@@ -28,7 +28,17 @@ builder.Services.AddSingleton<IMessageProducer<IStateReducer<DownloadRequestsSta
 builder.Services.AddSingleton<IMessageConsumer<IStateReducer<DownloadRequestsState>>>(messageQueue);
 
 builder.Services.AddHostedService<BackgroundDownloaderService>();
-builder.Services.AddHostedService<BackgroundStateManagementService>();
+builder.Services.AddHostedService<BackgroundStateManagementService>(s =>
+{
+    var initialState = new DownloadRequestsState(new());
+    return new(
+        new DownloadRequestsStateManager(
+            initialState,
+            s.GetRequiredService<IMessageConsumer<IStateReducer<DownloadRequestsState>>>()
+        ),
+        s.GetRequiredService<ILogger<BackgroundStateManagementService>>()
+    );
+});
 
 var app = builder.Build();
 

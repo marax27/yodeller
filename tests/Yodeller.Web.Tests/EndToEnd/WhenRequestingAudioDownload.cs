@@ -19,12 +19,12 @@ public class WhenRequestingAudioDownload : IClassFixture<TestApplicationWithFunc
         var sut = _application.CreateClient();
 
         await PostRequest(null, "valid-media-locator", sut);
-        await Task.Delay(300);
+        await Task.Delay(1000);
 
         _application.ExecutedDownloads.Single().AudioOnly.Should().BeTrue();
     }
 
-    private async Task PostRequest(List<string>? subtitlePatterns, string givenMediaLocator, HttpClient client)
+    private static async Task PostRequest(List<string>? subtitlePatterns, string givenMediaLocator, HttpClient client)
     {
         var payload = new NewRequestDto(subtitlePatterns, givenMediaLocator, true);
         var givenRequestBody = JsonContent.Create(payload);

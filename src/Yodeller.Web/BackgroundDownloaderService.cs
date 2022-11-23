@@ -20,7 +20,7 @@ public class BackgroundDownloaderService : BackgroundService
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                await _job.Execute();
+                await _job.Execute(stoppingToken);
                 await Task.Delay(103, stoppingToken);
             }
         }

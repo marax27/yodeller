@@ -1,7 +1,6 @@
-﻿using Core.Shared.StateManagement;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http.Json;
-using Yodeller.Application.State;
+using Yodeller.Application.Features.RequestDownload;
 using Yodeller.Web.Data;
 using Yodeller.Web.Tests.Helpers;
 
@@ -14,7 +13,8 @@ public class WhenApplicationFailsToStorePostedRequest : IClassFixture<TestApplic
     public WhenApplicationFailsToStorePostedRequest(TestApplicationWithMockedQueue application)
     {
         _application = application;
-        _application.MockRequestProducer.Setup(mock => mock.Produce(It.IsAny<IStateReducer<DownloadRequestsState>>()))
+        _application.MockRequestProducer
+            .Setup(mock => mock.Produce(It.IsAny<AddNewRequestReducer>()))
             .Throws(new InvalidOperationException("Internal producer failure"));
     }
 
