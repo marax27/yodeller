@@ -16,7 +16,8 @@ public class LockRequestForDownloadReducer : IStateReducer<DownloadRequestsState
     public DownloadRequestsState Invoke(DownloadRequestsState oldState)
     {
         var selectedRequest = oldState.Requests
-            .FirstOrDefault(request => request.Status == DownloadRequestStatus.New);
+            .Where(request => request.Status == DownloadRequestStatus.New)
+            .MinBy(request => request.RequestedTime);
 
         if (selectedRequest is null)
         {

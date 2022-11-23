@@ -36,7 +36,7 @@ public class WhenRequestingDownload
     }
 
     [Fact]
-    public async Task GivenValidCommandThenProducerReceivedExactlyOneRequest()
+    public async Task GivenValidCommandThenProduceExactlyOneReducer()
     {
         var sut = new RequestDownloadCommandHandler(_producerMock.Object, _stubClock);
 
@@ -46,9 +46,9 @@ public class WhenRequestingDownload
     }
 
     [Fact]
-    public async Task GivenValidCommandThenProducerReceivedExpectedRequest()
+    public async Task GivenValidCommandThenProduceExpectedReducer()
     {
-        var stubProducer = new StubMessageProducer();
+        var stubProducer = new StubReducerProducer();
         var sut = new RequestDownloadCommandHandler(stubProducer, _stubClock);
 
         await sut.Handle(_sampleCommand, CancellationToken.None);

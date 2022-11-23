@@ -4,7 +4,7 @@ using Yodeller.Application.State;
 
 namespace Yodeller.Application.Features.ClearFinished;
 
-public class ClearFinishedRequestsReducer : IStateReducer<DownloadRequestsState>
+public record ClearFinishedRequestsReducer : IStateReducer<DownloadRequestsState>
 {
     private static readonly IReadOnlyCollection<DownloadRequestStatus> StatusesToRemove = new[]
     {

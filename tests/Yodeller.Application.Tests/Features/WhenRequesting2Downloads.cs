@@ -25,7 +25,7 @@ public class WhenRequesting2Downloads
     }
 
     [Fact]
-    public async Task Given2ValidCommandsThenProducerReceivedExactly2Requests()
+    public async Task Given2ValidCommandsThenProduceExactly2Reducers()
     {
         var sut = new RequestDownloadCommandHandler(_producerMock.Object, _stubClock);
 
@@ -36,9 +36,9 @@ public class WhenRequesting2Downloads
     }
 
     [Fact]
-    public async Task Given2ValidCommandsThenProducerReceivedExpectedValues()
+    public async Task Given2ValidCommandsThenProduceExpectedValues()
     {
-        var stubProducer = new StubMessageProducer();
+        var stubProducer = new StubReducerProducer();
         var sut = new RequestDownloadCommandHandler(stubProducer, _stubClock);
 
         await sut.Handle(_firstCommand, CancellationToken.None);
@@ -58,9 +58,9 @@ public class WhenRequesting2Downloads
     }
 
     [Fact]
-    public async Task Given2ValidCommandsThenRequestsShouldHaveDifferentIds()
+    public async Task Given2ValidCommandsThenReducersShouldHaveDifferentIds()
     {
-        var stubProducer = new StubMessageProducer();
+        var stubProducer = new StubReducerProducer();
         var sut = new RequestDownloadCommandHandler(stubProducer, _stubClock);
 
         await sut.Handle(_firstCommand, CancellationToken.None);

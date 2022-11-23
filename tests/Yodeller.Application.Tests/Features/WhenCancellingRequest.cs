@@ -22,7 +22,7 @@ public class WhenCancellingRequest
     }
 
     [Fact]
-    public async Task GivenValidIdThenProduceExactly1Command()
+    public async Task GivenValidIdThenProduceExactly1Reducer()
     {
         var givenCommand = new CancelRequestCommand("1234");
         var sut = new CancelRequestCommandHandler(_producerMock.Object);
@@ -36,7 +36,7 @@ public class WhenCancellingRequest
     [InlineData("Sample-Request-Id")]
     [InlineData("1234")]
     [InlineData("ABC")]
-    public async Task GivenValidIdThenProduceExpectedMessage(string givenRequestId)
+    public async Task GivenValidIdThenProduceExpectedReducer(string givenRequestId)
     {
         var givenCommand = new CancelRequestCommand(givenRequestId);
         var expectedMessage = new CancelRequestReducer(givenRequestId);

@@ -6,7 +6,7 @@ using Yodeller.Application.State;
 
 namespace Yodeller.Application.Tests.Helpers;
 
-internal class StubMessageProducer : IMessageProducer<IStateReducer<DownloadRequestsState>>
+internal class StubReducerProducer : IMessageProducer<IStateReducer<DownloadRequestsState>>
 {
     private readonly List<IStateReducer<DownloadRequestsState>> _downloadRequests = new();
 
