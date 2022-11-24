@@ -34,7 +34,9 @@ builder.Services.AddHostedService<BackgroundStateManagementService>(s =>
     return new(
         new DownloadRequestsStateManager(
             initialState,
-            s.GetRequiredService<IMessageConsumer<IStateReducer<DownloadRequestsState>>>()
+            s.GetRequiredService<IMessageConsumer<IStateReducer<DownloadRequestsState>>>(),
+            s.GetRequiredService<IClock>(),
+            s.GetRequiredService<ILogger<DownloadRequestsStateManager>>()
         ),
         s.GetRequiredService<ILogger<BackgroundStateManagementService>>()
     );

@@ -47,4 +47,19 @@ public class StateManagerTests
         var actualSum = await tcs.Task;
         actualSum.Should().Be(expectedSum);
     }
+
+    [Fact]
+    public void GivenReducerThatThrowsThenThrowIdenticalException()
+    {
+        var sut = new StateManager<TestState>(_givenSampleState);
+        sut.Dispatch(new ThrowingReducer());
+        
+        var act = () => sut.Update();
+        
+        var thrownException = act.Should().ThrowExactly<ReduceException>().Which;
+        thrownException.Message.Should().Be("Failed to reduce 'ThrowingReducer'.");
+
+        thrownException.InnerException.Should().BeOfType<InvalidOperationException>();
+        thrownException.InnerException!.Message.Should().Be("Test reducer failure.");
+    }
 }

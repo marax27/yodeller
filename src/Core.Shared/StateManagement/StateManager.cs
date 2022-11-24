@@ -22,7 +22,19 @@ public class StateManager<TState> : IStateManager<TState>
     {
         while (_reducerQueue.TryDequeue(out var reducer))
         {
+            OnReduce(reducer);
+        }
+    }
+
+    protected virtual void OnReduce(IStateReducer<TState> reducer)
+    {
+        try
+        {
             State = reducer.Invoke(State);
+        }
+        catch (Exception e)
+        {
+            throw new ReduceException($"Failed to reduce '{reducer.GetType().Name}'.", e);
         }
     }
 }
