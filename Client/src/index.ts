@@ -1,26 +1,7 @@
 import "./main.css";
 import "./bulma.min.css";
 
-const ComponentBuilder = {
-  create: function (tag: any, classNames: any, children: any) {
-    const element = document.createElement(tag);
-
-    if (classNames != null && classNames.length > 0) {
-      element.classList.add(...classNames);
-    }
-
-    if (children != null) {
-      children.forEach((child: any) => element.appendChild(child));
-    }
-    return element;
-  },
-  createIcon: function (iconName: any, isHuge: any) {
-    const classes = isHuge ? ["huge-icon"] : [];
-    const icon = this.create("ion-icon", classes, []);
-    icon.setAttribute("name", iconName);
-    return this.create("span", ["icon"], [icon]);
-  },
-};
+import { ComponentBuilder } from "./component-builder";
 
 const NotificationsModule = {
   success: function (message: any, title: any) {
@@ -171,7 +152,7 @@ const RequestTableModule = {
     const message = ComponentBuilder.create("span", [], []);
     message.innerHTML = "<em>No registered downloads.</em>";
     const cell = ComponentBuilder.create("td", [], [message]);
-    cell.setAttribute("colspan", 5);
+    cell.setAttribute("colspan", "5");
     const row = ComponentBuilder.create("tr", ["no-results-row"], [cell]);
     return row;
   },
