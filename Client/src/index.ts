@@ -340,7 +340,18 @@ function clearFinishedRequests() {
     });
 }
 
+// This replaces in-HTML function calls such as the "onclick" attribute.
+function bindPageComponentsToActions() {
+  const byId = (id: string) => document.getElementById(id);
+
+  byId("submitVideoButton").onclick = () => postMediaRequest("video");
+  byId("submitAudioButton").onclick = () => postMediaRequest("audio");
+  byId("refreshTableButton").onclick = () => RequestTableModule.updateTable();
+  byId("clearFinishedButton").onclick = () => clearFinishedRequests();
+}
+
 function main() {
+  bindPageComponentsToActions();
   EnvironmentDetailsModule.initialise();
 
   RequestTableModule.updateTable();
