@@ -1,5 +1,8 @@
-﻿const ComponentBuilder = {
-  create: function (tag, classNames, children) {
+import "./main.css";
+import "./bulma.min.css";
+
+const ComponentBuilder = {
+  create: function (tag: any, classNames: any, children: any) {
     const element = document.createElement(tag);
 
     if (classNames != null && classNames.length > 0) {
@@ -7,11 +10,11 @@
     }
 
     if (children != null) {
-      children.forEach((child) => element.appendChild(child));
+      children.forEach((child: any) => element.appendChild(child));
     }
     return element;
   },
-  createIcon: function (iconName, isHuge) {
+  createIcon: function (iconName: any, isHuge: any) {
     const classes = isHuge ? ["huge-icon"] : [];
     const icon = this.create("ion-icon", classes, []);
     icon.setAttribute("name", iconName);
@@ -20,21 +23,21 @@
 };
 
 const NotificationsModule = {
-  success: function (message, title) {
+  success: function (message: any, title: any) {
     this._renderNew(message, "is-success", title);
   },
-  warning: function (message, title) {
+  warning: function (message: any, title: any) {
     this._renderNew(message, "is-warning", title);
   },
-  error: function (message, title) {
+  error: function (message: any, title: any) {
     this._renderNew(message, "is-danger", title);
   },
-  _renderNew: function (message, className, title) {
+  _renderNew: function (message: any, className: any, title: any) {
     const notifElement = this._create(message, className, title);
     const formCard = document.getElementById("formCard");
     formCard.parentNode.insertBefore(notifElement, formCard.nextSibling);
   },
-  _create(message, className, title) {
+  _create(message: any, className: any, title: any) {
     const notifTitle = ComponentBuilder.create("p", [], []);
     notifTitle.textContent = title;
 
@@ -68,7 +71,7 @@ const EnvironmentDetailsModule = {
       .then((response) => response.json())
       .then((dto) => this._process(dto));
   },
-  _process: function (environmentDto) {
+  _process: function (environmentDto: any) {
     const freeSpace = environmentDto.availableDiskSpacePercentage;
     this._updateTag(
       "diskSpaceStatusTag",
@@ -84,7 +87,7 @@ const EnvironmentDetailsModule = {
       environmentDto.postProcessingAvailable ? "is-success" : "is-warning"
     );
   },
-  _updateTag: function (tagId, className) {
+  _updateTag: function (tagId: any, className: any) {
     document.getElementById(tagId).classList.add(className);
   },
 };
@@ -95,7 +98,7 @@ const TableOverlayModule = {
     this._startTime = new Date();
   },
   disable: function () {
-    const overlayDurationMs = new Date() - this._startTime;
+    const overlayDurationMs = <any>new Date() - this._startTime;
     const overlay = this._overlay();
 
     if (overlayDurationMs > 250) {
@@ -110,8 +113,16 @@ const TableOverlayModule = {
   _overlay: function () {
     return document.querySelector("#refreshOverlay");
   },
-  _startTime: null,
+  _startTime: null as any,
 };
+
+interface GetRequestDto {
+  id: string;
+  mediaLocator: string;
+  audioOnly: boolean;
+  history: any[];
+  status: string;
+}
 
 const RequestTableModule = {
   updateTable: function () {
@@ -121,17 +132,22 @@ const RequestTableModule = {
 
     fetch("/requests")
       .then((response) => response.json())
-      .then((dtos) => {
-        dtos = Array.from(dtos).filter((dto) => dto.status !== "Forgotten");
+      .then((dtos: GetRequestDto[]) => {
+        dtos = Array.from(dtos).filter(
+          (dto: any) => dto.status !== "Forgotten"
+        );
 
-        const sortMap = {
+        const sortMap: { [status: string]: number } = {
           New: 1,
           Completed: 2,
           Failed: 0,
           Cancelled: 3,
           "In progress": -1,
         };
-        dtos.sort((a, b) => sortMap[a.status] - sortMap[b.status]);
+        dtos.sort(
+          (a: GetRequestDto, b: GetRequestDto) =>
+            sortMap[a.status] - sortMap[b.status]
+        );
         const newRows = dtos.map((dto) => this._createRowElement(dto));
 
         if (newRows.length === 0) {
@@ -159,7 +175,7 @@ const RequestTableModule = {
     const row = ComponentBuilder.create("tr", ["no-results-row"], [cell]);
     return row;
   },
-  _createRowElement: function (dto) {
+  _createRowElement: function (dto: GetRequestDto) {
     const cells = [
       this._createTextCell(dto.mediaLocator),
       this._createStatusCell(dto.status),
@@ -175,13 +191,13 @@ const RequestTableModule = {
 
     return ComponentBuilder.create("tr", [rowClass], cells);
   },
-  _createTextCell: function (text) {
+  _createTextCell: function (text: string) {
     const cell = document.createElement("td");
     cell.textContent = text;
     return cell;
   },
-  _createStatusCell: function (text) {
-    const classMap = {
+  _createStatusCell: function (text: string) {
+    const classMap: { [status: string]: string } = {
       "In progress": "is-info",
       New: "is-dark",
       Failed: "is-danger",
@@ -195,7 +211,12 @@ const RequestTableModule = {
     tag.style.textTransform = "uppercase";
     return ComponentBuilder.create("td", [], [tag]);
   },
-  _createActionsCell: function (requestId, mediaLocator, canCancel, history) {
+  _createActionsCell: function (
+    requestId: string,
+    mediaLocator: string,
+    canCancel: boolean,
+    history: any[]
+  ) {
     const commonClasses = ["button"];
     const buttons = [];
 
@@ -233,7 +254,7 @@ const RequestTableModule = {
   },
 };
 
-function cancelDownload(requestId, mediaLocator) {
+function cancelDownload(requestId: string, mediaLocator: string) {
   const url = "/requests/" + encodeURIComponent(requestId);
   fetch(url, { method: "DELETE" })
     .then((response) => {
@@ -247,12 +268,12 @@ function cancelDownload(requestId, mediaLocator) {
 }
 
 function validateForm() {
-  const form = document.forms["requestDownloadForm"];
+  const form = document.forms["requestDownloadForm" as any];
 
   const url = form["url"].value;
   const pass = url !== "";
 
-  const paragraph = document.querySelector(
+  const paragraph: HTMLElement = document.querySelector(
     "#requestDownloadForm .validation-paragraph"
   );
   paragraph.style.display = pass ? "none" : null;
@@ -265,12 +286,14 @@ function validateForm() {
   return pass;
 }
 
-function postMediaRequest(mediaType) {
+function postMediaRequest(mediaType: string) {
   if (!validateForm()) return false;
 
-  const mediaLocatorFormField = document.forms["requestDownloadForm"]["url"];
+  const mediaLocatorFormField =
+    document.forms["requestDownloadForm" as any]["url"];
 
-  const subtitlesFormField = document.forms["requestDownloadForm"]["subtitles"];
+  const subtitlesFormField =
+    document.forms["requestDownloadForm" as any]["subtitles"];
 
   const requestBody = {
     mediaLocator: mediaLocatorFormField.value,
@@ -317,7 +340,18 @@ function clearFinishedRequests() {
     });
 }
 
+// This replaces in-HTML function calls such as the "onclick" attribute.
+function bindPageComponentsToActions() {
+  const byId = (id: string) => document.getElementById(id);
+
+  byId("submitVideoButton").onclick = () => postMediaRequest("video");
+  byId("submitAudioButton").onclick = () => postMediaRequest("audio");
+  byId("refreshTableButton").onclick = () => RequestTableModule.updateTable();
+  byId("clearFinishedButton").onclick = () => clearFinishedRequests();
+}
+
 function main() {
+  bindPageComponentsToActions();
   EnvironmentDetailsModule.initialise();
 
   RequestTableModule.updateTable();

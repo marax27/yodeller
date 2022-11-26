@@ -15,12 +15,24 @@ RUN chmod a+rx /usr/local/bin/yt-dlp
 # Uninstall curl which was only used to install yt-dlp
 RUN apt remove -y curl
 
+FROM node:latest AS client
+WORKDIR /client
+COPY Client/package.json .
+RUN npm install
+COPY Client .
+RUN npm run build
+
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+
 WORKDIR /src
 COPY ["src/Yodeller.Web/Yodeller.Web.csproj", "src/Yodeller.Web/"]
 RUN dotnet restore "src/Yodeller.Web/Yodeller.Web.csproj"
 COPY . .
+
 WORKDIR "/src/src/Yodeller.Web"
+RUN rm wwwroot/*
+COPY --from=client "/client/dist" "wwwroot"
+
 RUN dotnet build "Yodeller.Web.csproj" -c Release -o /app/build
 
 FROM build AS publish
