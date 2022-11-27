@@ -11,41 +11,49 @@ interface GetRequestDto {
 }
 
 export class RequestTableModule {
+  private readonly _sortStatusMap: { [status: string]: number } = {
+    New: 1,
+    Completed: 2,
+    Failed: 0,
+    Cancelled: 3,
+    "In progress": -1,
+  };
+
   private readonly _tableOverlay = new TableOverlay();
 
   private readonly _notificationsHub: NotificationsHub;
+
+  private _requests: GetRequestDto[] = [];
 
   constructor(notificationsHub: NotificationsHub) {
     this._notificationsHub = notificationsHub;
   }
 
-  public updateTable(): void {
-    const tableBody = document.querySelector("#downloadsViewTable tbody");
+  public updateRow(requestId: string, status: string): void {
+    console.log(`Request #${requestId} changed its status to ${status}.`);
+    const request = this._requests.find((r) => r.id === requestId);
+    if (request == null) {
+      return;
+    }
 
+    request.status = status;
+    this._recreateRows();
+  }
+
+  public updateTable(): void {
     this._tableOverlay.enable();
 
     fetch("/requests")
       .then((response) => response.json())
       .then((dtos: GetRequestDto[]) => {
-        const sortMap: { [status: string]: number } = {
-          New: 1,
-          Completed: 2,
-          Failed: 0,
-          Cancelled: 3,
-          "In progress": -1,
-        };
+        this._requests = dtos;
 
-        dtos.sort(
+        this._requests.sort(
           (a: GetRequestDto, b: GetRequestDto) =>
-            sortMap[a.status] - sortMap[b.status]
+            this._sortStatusMap[a.status] - this._sortStatusMap[b.status]
         );
-        const newRows = dtos.map((dto) => this._createRowElement(dto));
 
-        if (newRows.length === 0) {
-          newRows.push(this._createFallbackRow());
-        }
-
-        tableBody.replaceChildren(...newRows);
+        this._recreateRows();
       })
       .then(() => {
         const spinner = document.querySelector(".refresh-indicator");
@@ -57,6 +65,20 @@ export class RequestTableModule {
         this._notificationsHub.error(`${err}`, title);
       })
       .finally(() => this._tableOverlay.disable());
+  }
+
+  private _recreateRows(): void {
+    const newRows = this._requests.map((dto) => this._createRowElement(dto));
+
+    if (newRows.length === 0) {
+      newRows.push(this._createFallbackRow());
+    }
+
+    this.tableBody().replaceChildren(...newRows);
+  }
+
+  private tableBody(): HTMLElement {
+    return document.querySelector("#downloadsViewTable tbody");
   }
 
   private _createFallbackRow(): HTMLElement {
