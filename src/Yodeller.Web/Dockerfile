@@ -30,7 +30,7 @@ RUN dotnet restore "src/Yodeller.Web/Yodeller.Web.csproj"
 COPY . .
 
 WORKDIR "/src/src/Yodeller.Web"
-RUN rm wwwroot/*
+RUN rm -f wwwroot/* .gitignore
 COPY --from=client "/client/dist" "wwwroot"
 
 RUN dotnet build "Yodeller.Web.csproj" -c Release -o /app/build
