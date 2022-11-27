@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Yodeller.Application.Features;
-using Yodeller.Web.Data;
 
 namespace Yodeller.Web.Controllers;
 
