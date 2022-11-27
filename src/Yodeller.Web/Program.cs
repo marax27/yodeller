@@ -20,6 +20,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IClock, BasicClock>();
 builder.Services.AddTransient<MediaDownloadScheduler>();
 builder.Services.AddTransient<IMediaDownloader, YtDlpMediaDownloader>();
+builder.Services.AddTransient<IUserNotificationsHub, UserNotificationsHub>();
 
 builder.Services.AddTransient<IDiskSpaceEnvironmentCheck, DiskSpaceEnvironmentCheck>();
 builder.Services.AddTransient<IApplicationAvailableEnvironmentCheck, ApplicationAvailableEnvironmentCheck>();

@@ -4,13 +4,17 @@ import {
   LogLevel,
 } from "@microsoft/signalr";
 
+export interface SignalRMessageHandlers {
+  onStatusChange: (requestId: string, status: string) => void;
+}
+
 export class SignalRHub {
   private _connection?: HubConnection;
 
-  public async initialise(): Promise<void> {
+  public async initialise(handlers: SignalRMessageHandlers): Promise<void> {
     this._connection = this._createConnection();
 
-    this._subscribeToEvents();
+    this._subscribeToEvents(handlers);
 
     await this._connection
       .start()
@@ -30,9 +34,7 @@ export class SignalRHub {
     return connection;
   }
 
-  private _subscribeToEvents(): void {
-    this._connection.on("Receive", (user: unknown, message: unknown) => {
-      // TODO.
-    });
+  private _subscribeToEvents(handlers: SignalRMessageHandlers): void {
+    this._connection.on("StatusChange", handlers.onStatusChange);
   }
 }

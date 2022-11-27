@@ -21,8 +21,4 @@
     <ProjectReference Include="..\Yodeller.Infrastructure\Yodeller.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Hubs\" />
-  </ItemGroup>
-
 </Project>

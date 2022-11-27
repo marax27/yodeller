@@ -96,7 +96,11 @@ function bindPageComponentsToActions() {
 }
 
 async function main() {
-  await SIGNALR_HUB.initialise();
+  await SIGNALR_HUB.initialise({
+    onStatusChange: (requestId: string, status: string) => {
+      REQUEST_TABLE_MODULE.updateRow(requestId, status);
+    },
+  });
 
   bindPageComponentsToActions();
   EnvironmentDetailsModule.initialise();
