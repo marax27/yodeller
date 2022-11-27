@@ -19,7 +19,11 @@ export class NotificationsHub {
     formCard.parentNode.insertBefore(notifElement, formCard.nextSibling);
   }
 
-  private _create(message: any, className: any, title: any): HTMLElement {
+  private _create(
+    message: string,
+    className: string,
+    title: string
+  ): HTMLElement {
     const notifTitle = ComponentBuilder.create("p", [], []);
     notifTitle.textContent = title;
 

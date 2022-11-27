@@ -2,11 +2,16 @@ import { ComponentBuilder } from "./component-builder";
 import { NotificationsHub } from "./notifications-hub";
 import { TableOverlay } from "./table-overlay";
 
+interface HistoryEntryDto {
+  description: string;
+  dateTime: string;
+}
+
 interface GetRequestDto {
   id: string;
   mediaLocator: string;
   audioOnly: boolean;
-  history: any[];
+  history: HistoryEntryDto[];
   status: string;
 }
 
@@ -133,7 +138,7 @@ export class RequestTableModule {
     requestId: string,
     mediaLocator: string,
     canCancel: boolean,
-    history: any[]
+    history: HistoryEntryDto[]
   ): HTMLElement {
     const commonClasses = ["button"];
     const buttons = [];
