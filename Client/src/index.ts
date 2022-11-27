@@ -4,9 +4,11 @@ import "./bulma.min.css";
 import { NotificationsHub } from "./notifications-hub";
 import { EnvironmentDetailsModule } from "./environment-details-module";
 import { RequestTableModule } from "./request-table-module";
+import { SignalRHub } from "./signalr-hub";
 
 const NOTIFICATIONS_HUB = new NotificationsHub();
 const REQUEST_TABLE_MODULE = new RequestTableModule(NOTIFICATIONS_HUB);
+const SIGNALR_HUB = new SignalRHub();
 
 function validateForm() {
   const form = document.forms["requestDownloadForm" as any];
@@ -91,7 +93,9 @@ function bindPageComponentsToActions() {
   byId("clearFinishedButton").onclick = () => clearFinishedRequests();
 }
 
-function main() {
+async function main() {
+  await SIGNALR_HUB.initialise();
+
   bindPageComponentsToActions();
   EnvironmentDetailsModule.initialise();
 

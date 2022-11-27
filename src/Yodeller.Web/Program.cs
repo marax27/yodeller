@@ -6,12 +6,14 @@ using Yodeller.Application.Ports;
 using Yodeller.Application.State;
 using Yodeller.Infrastructure.Adapters;
 using Yodeller.Web;
+using Yodeller.Web.Hubs;
 using Yodeller.Web.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddMediatR(typeof(ApplicationLayerDependencies).Assembly);
 builder.Services.AddControllers();
+builder.Services.AddSignalR();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -54,6 +56,7 @@ app.UseAuthorization();
 app.UseMiddleware<CustomExceptionHandlingMiddleware>();
 
 app.MapControllers();
+app.MapHub<RealTimeHub>("/real-time");
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
