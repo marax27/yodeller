@@ -41,7 +41,9 @@ function postMediaRequest(mediaType: string) {
   const requestBody = {
     mediaLocator: mediaLocatorFormField.value,
     audioOnly: mediaType === "audio",
-    subtitlePatterns: (subtitlesFormField.value || "").split(","),
+    subtitlePatterns: (subtitlesFormField.value || "")
+      .split(",")
+      .filter((s: string) => s !== ""),
   };
 
   fetch("/requests", {

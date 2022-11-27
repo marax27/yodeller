@@ -44,6 +44,6 @@ public class DownloadRequestsStateManager : StateManager<DownloadRequestsState>
         }
 
         var endTime = _clock.GetNow();
-        _logger.LogDebug("Reduce '{ReducerType}' end at {StartTime}", startTime, reducerType);
+        _logger.LogDebug("Reduce '{ReducerType}' end at {StartTime}", endTime, reducerType);
     }
 }
