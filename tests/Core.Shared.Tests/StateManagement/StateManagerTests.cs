@@ -18,12 +18,12 @@ public class StateManagerTests
     }
 
     [Fact]
-    public void GivenReducerThatAddsItemsThenManagerContainsExpectedState()
+    public async Task GivenReducerThatAddsItemsThenManagerContainsExpectedState()
     {
         var sut = new StateManager<TestState>(_givenSampleState);
         sut.Dispatch(new AddValueReducer(9));
 
-        sut.Update();
+        await sut.Update();
 
         sut.State.Values.Should().Equal(3, 3, -1, 9);
     }
@@ -42,21 +42,21 @@ public class StateManagerTests
         sut.Dispatch(new AddValueReducer(48));
         sut.Dispatch(new AddValueReducer(60));
 
-        sut.Update();
+        await sut.Update();
 
         var actualSum = await tcs.Task;
         actualSum.Should().Be(expectedSum);
     }
 
     [Fact]
-    public void GivenReducerThatThrowsThenThrowIdenticalException()
+    public async Task GivenReducerThatThrowsThenThrowIdenticalException()
     {
         var sut = new StateManager<TestState>(_givenSampleState);
         sut.Dispatch(new ThrowingReducer());
         
-        var act = () => sut.Update();
+        var act = async () => await sut.Update();
         
-        var thrownException = act.Should().ThrowExactly<ReduceException>().Which;
+        var thrownException = (await act.Should().ThrowExactlyAsync<ReduceException>()).Which;
         thrownException.Message.Should().Be("Failed to reduce 'ThrowingReducer'.");
 
         thrownException.InnerException.Should().BeOfType<InvalidOperationException>();

@@ -3,7 +3,7 @@ import "./bulma.min.css";
 
 import { NotificationsHub } from "./notifications-hub";
 import { EnvironmentDetailsModule } from "./environment-details-module";
-import { RequestTableModule } from "./request-table-module";
+import { GetRequestDto, RequestTableModule } from "./request-table-module";
 import { SignalRHub } from "./signalr-hub";
 
 const NOTIFICATIONS_HUB = new NotificationsHub();
@@ -97,8 +97,8 @@ function bindPageComponentsToActions() {
 
 async function main() {
   await SIGNALR_HUB.initialise({
-    onStatusChange: (requestId: string, status: string) => {
-      REQUEST_TABLE_MODULE.updateRow(requestId, status);
+    onRequestUpdate: (updatedRequests: GetRequestDto[]) => {
+      REQUEST_TABLE_MODULE.updateSome(updatedRequests);
     },
   });
 

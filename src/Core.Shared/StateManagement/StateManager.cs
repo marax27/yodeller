@@ -18,19 +18,20 @@ public class StateManager<TState> : IStateManager<TState>
         _reducerQueue.Enqueue(reducer);
     }
 
-    public virtual void Update()
+    public virtual async ValueTask Update()
     {
         while (_reducerQueue.TryDequeue(out var reducer))
         {
-            OnReduce(reducer);
+            await OnReduce(reducer);
         }
     }
 
-    protected virtual void OnReduce(IStateReducer<TState> reducer)
+    protected virtual ValueTask OnReduce(IStateReducer<TState> reducer)
     {
         try
         {
             State = reducer.Invoke(State);
+            return ValueTask.CompletedTask;
         }
         catch (Exception e)
         {

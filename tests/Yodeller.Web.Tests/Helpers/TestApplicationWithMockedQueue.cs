@@ -39,7 +39,7 @@ public class TestApplicationWithMockedQueue : WebApplicationFactory<Program>
 
     private static void OnReducerProduced(IStateReducer<DownloadRequestsState> reducer)
     {
-        var dumbState = new DownloadRequestsState(new());
+        var dumbState = new DownloadRequestsState(new(), new());
         reducer.Invoke(dumbState);
     }
 }

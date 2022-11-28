@@ -7,7 +7,7 @@ interface HistoryEntryDto {
   dateTime: string;
 }
 
-interface GetRequestDto {
+export interface GetRequestDto {
   id: string;
   mediaLocator: string;
   audioOnly: boolean;
@@ -34,14 +34,17 @@ export class RequestTableModule {
     this._notificationsHub = notificationsHub;
   }
 
-  public updateRow(requestId: string, status: string): void {
-    console.log(`Request #${requestId} changed its status to ${status}.`);
-    const request = this._requests.find((r) => r.id === requestId);
-    if (request == null) {
+  public updateSome(updatedRequests: GetRequestDto[]) {
+    if (updatedRequests == null || updatedRequests.length === 0) {
       return;
     }
+    updatedRequests.forEach((request) => {
+      const position = this._requests.findIndex((r) => r.id === request.id);
+      if (position !== -1) {
+        this._requests[position] = request;
+      }
+    });
 
-    request.status = status;
     this._recreateRows();
   }
 

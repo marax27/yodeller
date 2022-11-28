@@ -32,8 +32,10 @@ public class LockRequestForDownloadReducer : IStateReducer<DownloadRequestsState
                 .Select(request => request.Id == updatedRequest.Id ? updatedRequest : request)
                 .ToList();
 
+            var alteredRequestIds = oldState.AlteredRequestIds.Append(updatedRequest.Id).ToList();
+
             _callback(updatedRequest);
-            return new(newRequests);
+            return new(newRequests, alteredRequestIds);
         }
     }
 }

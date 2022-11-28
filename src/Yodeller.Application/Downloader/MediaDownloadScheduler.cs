@@ -13,7 +13,6 @@ public class MediaDownloadScheduler : IDisposable
     private readonly IMessageProducer<IStateReducer<DownloadRequestsState>> _messageProducer;
     private readonly IClock _clock;
     private readonly ILogger<MediaDownloadScheduler> _logger;
-    private readonly IUserNotificationsHub _userNotificationsHub;
 
     private Task? _downloadInProgress = null;
 
@@ -21,14 +20,12 @@ public class MediaDownloadScheduler : IDisposable
         IMediaDownloader downloader,
         IMessageProducer<IStateReducer<DownloadRequestsState>> messageProducer,
         IClock clock,
-        ILogger<MediaDownloadScheduler> logger,
-        IUserNotificationsHub userNotificationsHub)
+        ILogger<MediaDownloadScheduler> logger)
     {
         _downloader = downloader ?? throw new ArgumentNullException(nameof(downloader));
         _messageProducer = messageProducer ?? throw new ArgumentNullException(nameof(messageProducer));
         _clock = clock ?? throw new ArgumentNullException(nameof(clock));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _userNotificationsHub = userNotificationsHub;
     }
 
     public async Task Execute(CancellationToken stoppingToken)
@@ -49,9 +46,7 @@ public class MediaDownloadScheduler : IDisposable
 
         if (request is { })
         {
-            await _userNotificationsHub.SendStatusChange(request.Id, DownloadRequestStatus.InProgress);
-            _downloadInProgress = Task.Run(() => PerformDownload(request), stoppingToken)
-                .ContinueWith(async t => await SendUserNotificationAfterDownloadFinished(request.Id, t), stoppingToken);
+            _downloadInProgress = Task.Run(() => PerformDownload(request), stoppingToken);
         }
     }
 
@@ -81,12 +76,6 @@ public class MediaDownloadScheduler : IDisposable
         }
 
         return downloadSuccessful;
-    }
-
-    private async Task SendUserNotificationAfterDownloadFinished(string requestId, Task<bool> downloadTask)
-    {
-        var newStatus = (await downloadTask) ? DownloadRequestStatus.Completed : DownloadRequestStatus.Failed;
-        await _userNotificationsHub.SendStatusChange(requestId, newStatus);
     }
 
     public void Dispose()

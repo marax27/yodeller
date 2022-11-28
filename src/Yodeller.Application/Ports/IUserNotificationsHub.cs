@@ -4,5 +4,5 @@ namespace Yodeller.Application.Ports;
 
 public interface IUserNotificationsHub
 {
-    Task SendStatusChange(string requestId, DownloadRequestStatus newStatus);
+    Task SendRequestUpdate(IReadOnlyCollection<DownloadRequest> updatedRequests);
 }

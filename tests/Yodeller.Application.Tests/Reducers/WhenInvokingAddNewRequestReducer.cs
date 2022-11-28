@@ -7,7 +7,7 @@ namespace Yodeller.Application.Tests.Reducers;
 
 public class WhenInvokingAddNewRequestReducer
 {
-    private static readonly DownloadRequestsState EmptyState = new(new());
+    private static readonly DownloadRequestsState EmptyState = new(new(), new());
 
     private static readonly DateTime SampleDateTime = new(2005, 1, 1, 3, 45, 59);
 

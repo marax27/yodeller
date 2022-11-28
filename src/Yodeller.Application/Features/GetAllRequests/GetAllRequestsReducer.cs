@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Core.Shared.StateManagement;
+﻿using Core.Shared.StateManagement;
 using Yodeller.Application.Models;
 using Yodeller.Application.State;
 
@@ -24,32 +23,9 @@ public class GetAllRequestsReducer
     {
         var requests = state.Requests
             .Where(request => Statuses.Contains(request.Status))
-            .Select(Map)
+            .Select(DownloadRequestMapper.Map)
             .ToArray();
 
         return new(requests);
-    }
-
-    private static GetAllRequestsQuery.DownloadRequestDto Map(DownloadRequest model) => new(
-        model.Id,
-        model.MediaLocator,
-        model.AudioOnly,
-        MapHistory(model.History),
-        model.Status switch
-        {
-            DownloadRequestStatus.New => "New",
-            DownloadRequestStatus.Completed => "Completed",
-            DownloadRequestStatus.Failed => "Failed",
-            DownloadRequestStatus.InProgress => "In progress",
-            DownloadRequestStatus.Cancelled => "Cancelled",
-            _ => throw new UnreachableException("Unsupported request status.")
-        }
-    );
-
-    private static IReadOnlyCollection<GetAllRequestsQuery.HistoryEntryDto> MapHistory(IEnumerable<HistoryEntry> entries)
-    {
-        return entries
-            .Select(entry => new GetAllRequestsQuery.HistoryEntryDto(entry.Description, entry.DateTime))
-            .ToArray();
     }
 }

@@ -34,6 +34,8 @@ public record FinishDownloadReducer(
             .Select(request => request.Id == RequestId ? updatedRequest : request)
             .ToList();
 
-        return new(newRequests);
+        var alteredRequestIds = oldState.AlteredRequestIds.Append(RequestId).ToList();
+
+        return new(newRequests, alteredRequestIds);
     }
 }
