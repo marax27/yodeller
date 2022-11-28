@@ -9,8 +9,21 @@ public class ApplicationAvailableEnvironmentCheck : IApplicationAvailableEnviron
     {
         var execution = new ProcessExecution();
 
-        var result = await execution.Run(new(applicationName, "--help", null));
+        var result = await execution.Run(
+            new(
+                applicationName,
+                "--help",
+                SuppressSubProcessOutput,
+                SuppressSubProcessOutput,
+                null
+            )
+        );
 
         return result.ExitCode == 0;
+    }
+
+    private void SuppressSubProcessOutput(string line)
+    {
+
     }
 }

@@ -33,7 +33,7 @@ public class TestApplicationWithMockedQueue : WebApplicationFactory<Program>
 
         MockMediaDownloader
             .Setup(mock => mock.Download(It.IsAny<DownloadProcessSpecification>()))
-            .Returns(true);
+            .ReturnsAsync(true);
         services.AddSingleton(MockMediaDownloader.Object);
     }
 

@@ -23,7 +23,7 @@ public class BackgroundStateManagementService : BackgroundService
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                _stateManager.Update();
+                await _stateManager.Update();
                 await Task.Delay(57, stoppingToken);
             }
         }
