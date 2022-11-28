@@ -22,7 +22,7 @@ public class WhenInvokingGetAllRequestsReducer
     public async Task GivenEmptyStateReturnEmptyCollection()
     {
         var tcs = new TaskCompletionSource<GetAllRequestsQuery.Result>();
-        var givenState = new DownloadRequestsState(new());
+        var givenState = new DownloadRequestsState(new(), new());
         var sut = new GetAllRequestsReducer(tcs.SetResult);
 
         var newState = sut.Invoke(givenState);
@@ -39,7 +39,7 @@ public class WhenInvokingGetAllRequestsReducer
         {
             _sampleRequest with { Id = "id1", MediaLocator = "ML1", Status = DownloadRequestStatus.New },
             _sampleRequest with { Id = "id2", MediaLocator = "ML2", Status = DownloadRequestStatus.InProgress },
-        });
+        }, new());
         var sut = new GetAllRequestsReducer(tcs.SetResult);
 
         var newState = sut.Invoke(givenState);

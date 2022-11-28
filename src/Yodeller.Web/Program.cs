@@ -33,13 +33,14 @@ builder.Services.AddSingleton<IMessageConsumer<IStateReducer<DownloadRequestsSta
 builder.Services.AddHostedService<BackgroundDownloaderService>();
 builder.Services.AddHostedService<BackgroundStateManagementService>(s =>
 {
-    var initialState = new DownloadRequestsState(new());
+    var initialState = new DownloadRequestsState(new(), new());
     return new(
         new DownloadRequestsStateManager(
             initialState,
             s.GetRequiredService<IMessageConsumer<IStateReducer<DownloadRequestsState>>>(),
             s.GetRequiredService<IClock>(),
-            s.GetRequiredService<ILogger<DownloadRequestsStateManager>>()
+            s.GetRequiredService<ILogger<DownloadRequestsStateManager>>(),
+            s.GetRequiredService<IUserNotificationsHub>()
         ),
         s.GetRequiredService<ILogger<BackgroundStateManagementService>>()
     );

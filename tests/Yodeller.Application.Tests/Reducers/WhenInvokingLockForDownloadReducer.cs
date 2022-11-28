@@ -21,7 +21,7 @@ public class WhenInvokingLockForDownloadReducer
     [Fact]
     public async Task GivenEmptyStateReturnNull()
     {
-        var givenState = new DownloadRequestsState(new());
+        var givenState = new DownloadRequestsState(new(), new());
 
         var result = await Act(givenState);
 
@@ -36,7 +36,7 @@ public class WhenInvokingLockForDownloadReducer
             _sampleRequest with { Id = "id1", MediaLocator = "ML1", Status = DownloadRequestStatus.Cancelled },
             _sampleRequest with { Id = "id2", MediaLocator = "ML2", Status = DownloadRequestStatus.Failed },
             _sampleRequest with { Id = "id3", MediaLocator = "ML3", Status = DownloadRequestStatus.Completed }
-        });
+        }, new());
 
         var result = await Act(givenState);
 
@@ -51,7 +51,7 @@ public class WhenInvokingLockForDownloadReducer
             _sampleRequest with { Id = "id1", MediaLocator = "ML1", RequestedTime = SampleDateTime.AddSeconds(60) },
             _sampleRequest with { Id = "id2", MediaLocator = "ML2", RequestedTime = SampleDateTime.AddSeconds(1) },
             _sampleRequest with { Id = "id3", MediaLocator = "ML3", RequestedTime = SampleDateTime.AddSeconds(30) }
-        });
+        }, new());
 
         var result = await Act(givenState);
 

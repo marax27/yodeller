@@ -3,9 +3,10 @@ import {
   HubConnectionBuilder,
   LogLevel,
 } from "@microsoft/signalr";
+import { GetRequestDto } from "./request-table-module";
 
 export interface SignalRMessageHandlers {
-  onStatusChange: (requestId: string, status: string) => void;
+  onRequestUpdate: (updatedRequests: GetRequestDto[]) => void;
 }
 
 export class SignalRHub {
@@ -35,6 +36,6 @@ export class SignalRHub {
   }
 
   private _subscribeToEvents(handlers: SignalRMessageHandlers): void {
-    this._connection.on("StatusChange", handlers.onStatusChange);
+    this._connection.on("RequestUpdate", handlers.onRequestUpdate);
   }
 }

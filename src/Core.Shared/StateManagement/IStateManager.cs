@@ -16,5 +16,5 @@ public interface IStateManager<TState>
     /// <summary>
     /// Evaluate all reducers dispatched so far (and not evaluated by a previous update).
     /// </summary>
-    void Update();
+    ValueTask Update();
 }

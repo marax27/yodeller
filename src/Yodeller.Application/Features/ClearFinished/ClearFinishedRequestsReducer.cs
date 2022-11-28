@@ -19,6 +19,6 @@ public record ClearFinishedRequestsReducer : IStateReducer<DownloadRequestsState
             .Where(request => !StatusesToRemove.Contains(request.Status))
             .ToList();
 
-        return new(newRequests);
+        return oldState with { Requests = newRequests };
     }
 }

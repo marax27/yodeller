@@ -1,5 +1,5 @@
-﻿using System.Diagnostics;
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.SignalR;
+using Yodeller.Application;
 using Yodeller.Application.Models;
 using Yodeller.Application.Ports;
 
@@ -14,18 +14,12 @@ public class UserNotificationsHub : IUserNotificationsHub
         _hubContext = hubContext ?? throw new ArgumentNullException(nameof(hubContext));
     }
 
-    public async Task SendStatusChange(string requestId, DownloadRequestStatus newStatus)
+    public async Task SendRequestUpdate(IReadOnlyCollection<DownloadRequest> updatedRequests)
     {
-        await _hubContext.Clients.All.SendAsync("StatusChange", requestId, MapStatus(newStatus));
-    }
+        var result = updatedRequests
+            .Select(DownloadRequestMapper.Map)
+            .ToArray();
 
-    private static string MapStatus(DownloadRequestStatus status) => status switch
-    {
-        DownloadRequestStatus.New => "New",
-        DownloadRequestStatus.InProgress => "In progress",
-        DownloadRequestStatus.Completed => "Completed",
-        DownloadRequestStatus.Failed => "Failed",
-        DownloadRequestStatus.Cancelled => "Cancelled",
-        _ => throw new UnreachableException(nameof(status))
-    };
+        await _hubContext.Clients.All.SendAsync("RequestUpdate", result);
+    }
 }

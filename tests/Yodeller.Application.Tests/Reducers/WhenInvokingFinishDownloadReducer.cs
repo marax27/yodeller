@@ -24,7 +24,7 @@ public class WhenInvokingFinishDownloadReducer
         _sampleRequest with { Id = "id1", MediaLocator = "ML1", Status = DownloadRequestStatus.InProgress },
         _sampleRequest with { Id = "id2", MediaLocator = "ML2", Status = DownloadRequestStatus.Failed },
         _sampleRequest with { Id = "id3", MediaLocator = "ML3", Status = DownloadRequestStatus.Completed }
-    });
+    }, new());
 
     [Fact]
     public void GivenRequestFinishedSuccessfullyThenStatusIsCompleted()

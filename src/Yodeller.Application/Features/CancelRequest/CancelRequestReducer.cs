@@ -12,7 +12,9 @@ public record CancelRequestReducer(string RequestId) : IStateReducer<DownloadReq
             .Select(request => request.Id == RequestId ? Cancel(request) : request)
             .ToList();
 
-        return new(newRequests);
+        var alteredRequestIds = oldState.AlteredRequestIds.Append(RequestId).ToList();
+
+        return new(newRequests, alteredRequestIds);
     }
 
     private static DownloadRequest Cancel(DownloadRequest request)

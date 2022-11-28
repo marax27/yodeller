@@ -24,7 +24,7 @@ public class WhenInvokingCancelRequestReducer
         var givenState = new DownloadRequestsState(new()
         {
             _sampleRequest with { Id = "0001", Status = DownloadRequestStatus.New }
-        });
+        }, new());
         var sut = new CancelRequestReducer("0001");
 
         var newState = sut.Invoke(givenState);
@@ -43,7 +43,7 @@ public class WhenInvokingCancelRequestReducer
         var givenState = new DownloadRequestsState(new()
         {
             _sampleRequest with { Id = "0002", Status = givenRequestStatus }
-        });
+        }, new());
         var sut = new CancelRequestReducer("0002");
 
         var newState = sut.Invoke(givenState);

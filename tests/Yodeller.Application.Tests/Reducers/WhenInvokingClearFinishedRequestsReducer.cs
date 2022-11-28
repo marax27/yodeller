@@ -21,7 +21,7 @@ public class WhenInvokingClearFinishedRequestsReducer
     [Fact]
     public void GivenEmptyStateThenReturnEmptyState()
     {
-        var givenState = new DownloadRequestsState(new());
+        var givenState = new DownloadRequestsState(new(), new());
         var sut = new ClearFinishedRequestsReducer();
 
         var newState = sut.Invoke(givenState);
@@ -39,7 +39,7 @@ public class WhenInvokingClearFinishedRequestsReducer
             _sampleRequest with { Id = "0003", Status = DownloadRequestStatus.Completed },
             _sampleRequest with { Id = "0004", Status = DownloadRequestStatus.Failed },
             _sampleRequest with { Id = "0005", Status = DownloadRequestStatus.Cancelled },
-        });
+        }, new());
         var sut = new ClearFinishedRequestsReducer();
 
         var newState = sut.Invoke(givenState);

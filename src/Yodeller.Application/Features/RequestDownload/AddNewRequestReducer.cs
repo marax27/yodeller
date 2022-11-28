@@ -8,6 +8,8 @@ public record AddNewRequestReducer(DownloadRequest NewRequest) : IStateReducer<D
 {
     public DownloadRequestsState Invoke(DownloadRequestsState oldState)
     {
-        return new DownloadRequestsState(oldState.Requests.Append(NewRequest).ToList());
+        var requests = oldState.Requests.Append(NewRequest).ToList();
+
+        return oldState with { Requests = requests };
     }
 }
