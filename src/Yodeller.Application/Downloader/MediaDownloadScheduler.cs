@@ -41,7 +41,7 @@ public class MediaDownloadScheduler : IDisposable
         _downloadInProgress?.Dispose();
 
         var tcs = new TaskCompletionSource<DownloadRequest?>();
-        _messageProducer.Produce(new LockRequestForDownloadReducer(tcs.SetResult));
+        _messageProducer.Produce(new LockRequestForDownloadReducer(_clock.GetNow(), tcs.SetResult));
         var request = await tcs.Task;
 
         if (request is { })

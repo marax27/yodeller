@@ -23,7 +23,7 @@ public class DownloadRequestsStateManagerTests
     {
         var sut = CreateSut();
         sut.Dispatch(new AddNewRequestReducer(_sampleRequest));
-        sut.Dispatch(new LockRequestForDownloadReducer(_ => {}));
+        sut.Dispatch(new LockRequestForDownloadReducer(SampleDateTime, _ => {}));
 
         await sut.Update();
 
@@ -36,7 +36,7 @@ public class DownloadRequestsStateManagerTests
     {
         var sut = CreateSut();
         sut.Dispatch(new AddNewRequestReducer(_sampleRequest));
-        sut.Dispatch(new LockRequestForDownloadReducer(_ => { }));
+        sut.Dispatch(new LockRequestForDownloadReducer(SampleDateTime, _ => { }));
         sut.Dispatch(new AddNewRequestReducer(_sampleRequest with { Id = "id2" }));
 
         await sut.Update();

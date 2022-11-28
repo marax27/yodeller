@@ -6,10 +6,12 @@ namespace Yodeller.Application.Downloader.Reducers;
 
 public class LockRequestForDownloadReducer : IStateReducer<DownloadRequestsState>
 {
+    private readonly DateTime _downloadStartTime;
     private readonly Action<DownloadRequest?> _callback;
 
-    public LockRequestForDownloadReducer(Action<DownloadRequest?> callback)
+    public LockRequestForDownloadReducer(DateTime downloadStartTime, Action<DownloadRequest?> callback)
     {
+        _downloadStartTime = downloadStartTime;
         _callback = callback;
     }
 
@@ -26,7 +28,11 @@ public class LockRequestForDownloadReducer : IStateReducer<DownloadRequestsState
         }
         else
         {
-            var updatedRequest = selectedRequest with { Status = DownloadRequestStatus.InProgress };
+            var updatedRequest = selectedRequest with
+            {
+                Status = DownloadRequestStatus.InProgress,
+                History = selectedRequest.History.Append(new("Download started.", _downloadStartTime)).ToList()
+            };
 
             var newRequests = oldState.Requests
                 .Select(request => request.Id == updatedRequest.Id ? updatedRequest : request)
