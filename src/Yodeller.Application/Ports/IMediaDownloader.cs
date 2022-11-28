@@ -4,5 +4,5 @@ namespace Yodeller.Application.Ports;
 
 public interface IMediaDownloader
 {
-    bool Download(DownloadProcessSpecification what);
+    Task<bool> Download(DownloadProcessSpecification what);
 }

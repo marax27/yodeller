@@ -46,11 +46,11 @@ public class MediaDownloadScheduler : IDisposable
 
         if (request is { })
         {
-            _downloadInProgress = Task.Run(() => PerformDownload(request), stoppingToken);
+            _downloadInProgress = Task.Run(async () => await PerformDownload(request), stoppingToken);
         }
     }
 
-    private bool PerformDownload(DownloadRequest request)
+    private async Task<bool> PerformDownload(DownloadRequest request)
     {
         var downloadSuccessful = false;
 
@@ -60,7 +60,7 @@ public class MediaDownloadScheduler : IDisposable
 
             var specs = new DownloadProcessSpecification(request.SubtitlePatterns, request.MediaLocator, request.AudioOnly);
 
-            downloadSuccessful = _downloader.Download(specs);
+            downloadSuccessful = await _downloader.Download(specs);
 
             _logger.LogInformation("Medium '{MediaLocator}' {Message}.",
                 request.MediaLocator,

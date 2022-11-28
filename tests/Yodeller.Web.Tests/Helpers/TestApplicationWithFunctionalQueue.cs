@@ -28,10 +28,10 @@ public class TestApplicationWithFunctionalQueue : WebApplicationFactory<Program>
         services.AddSingleton(MockMediaDownloader.Object);
     }
 
-    private bool OnDownloadRequest(DownloadProcessSpecification what)
+    private Task<bool> OnDownloadRequest(DownloadProcessSpecification what)
     {
         _executedDownloads.Add(what);
-        return true;
+        return Task.FromResult(true);
     }
 }
 

@@ -15,7 +15,7 @@ public class YtDlpMediaDownloader : IMediaDownloader
         _logger = logger;
     }
 
-    public bool Download(DownloadProcessSpecification what)
+    public async Task<bool> Download(DownloadProcessSpecification what)
     {
         var arguments = CreateDownloaderArguments(what);
 
@@ -24,26 +24,26 @@ public class YtDlpMediaDownloader : IMediaDownloader
         var foundErrors = false;
         var errorOutputBuilder = new StringBuilder();
 
-        var result = execution.Run(
+        var result = await execution.Run(
             new(
                 "yt-dlp",
                 arguments,
                 stdout => { },
                 stderr =>
                 {
-                    if (!foundErrors)
-                        _logger.LogError("Errors during download... Full log will be emitted after the sub-process exits.");
                     foundErrors = true;
                     errorOutputBuilder.AppendLine(stderr);
                 },
                 "/out"
             )
-        ).Result;
+        );
 
-        if (foundErrors)
-            _logger.LogError("Downloader error output: {ErrorOutput}", errorOutputBuilder.ToString());
+        var isSuccess = result.ExitCode == 0;
 
-        return result.ExitCode == 0;
+        if (foundErrors && !isSuccess)
+            _logger.LogError("Downloader standard error output: {ErrorOutput}", errorOutputBuilder.ToString());
+
+        return isSuccess;
     }
 
     private static string CreateDownloaderArguments(DownloadProcessSpecification what)
